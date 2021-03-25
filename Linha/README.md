@@ -16,7 +16,7 @@
   
   ---
   ### Questão 02 - Como alterar a cor de fundo da janela gráfica de branca para azul? Apresente o comando.
-  Para alterar o fundo da janela gráfica devemos alterar o comando "glClearColor" que está dentro da função init. Esse comando possui 4 atributos, em que, os três primeiros representam, respectivamente, as intensidade de vermelho (R), verde (G) e azul (B). Além disso, o quarto e último argumento é o "alfa", que existe para gerar a transparência. 
+  Para alterar o fundo da janela gráfica devemos alterar o comando `glClearColor` que está dentro da função init. Esse comando possui 4 atributos, em que, os três primeiros representam, respectivamente, as intensidade de vermelho (R), verde (G) e azul (B). Além disso, o quarto e último argumento é o "alfa", que existe para gerar a transparência. 
   Todos variam entre 0 e 1. Portanto, para alterar o fundo para azul, utilizaríamos o seguinte comando:
   
   `glClearColor(0.0, 0.0, 1.0, 1.0);`
@@ -27,7 +27,7 @@
 
   ---
   ### Questão 03 - Desenhe um quadrado a partir da junção de 4 linhas. Apresente o trecho de código. Na sequência, desenhe um quadrado similar (mesmo valor de lado) por meio da substituição de `glBegin(GL_LINES);` por `glBegin(GL_QUADS);`.
-  Para desenhar um quadrado, obviamente são necessários quatro pontos ao invés de dois, além disso, esses pontos devem ser equidistantes entre si nas componentes X e Y. Vale lembrar que cada ponto é criado a partir do comando "glVertex2i" que está dentro da função display.
+  Para desenhar um quadrado, obviamente são necessários quatro pontos ao invés de dois, além disso, esses pontos devem ser equidistantes entre si nas componentes X e Y. Vale lembrar que cada ponto é criado a partir do comando `glVertex2i` que está dentro da função display.
   Assim sendo, com o intuito de simplificar a visualização, optamos por gerar um quadrado de 150 pixels de largura, logo os seguintes pontos foram criados:
 
   ```C++
