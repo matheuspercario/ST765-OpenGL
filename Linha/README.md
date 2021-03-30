@@ -12,7 +12,7 @@
 
   | Antes                                             | Depois                                            |
   | ------------------------------------------------- | ------------------------------------------------- |
-  | <img src="assets/img/img01-ex01.png" width="150"> | <img src="assets/img/img02-ex01.png" width="150"> |
+  | ![img-1](assets/img/img01-ex01.png)               | ![img-1](assets/img/img02-ex01.png)               |
   
   ---
   ### Questão 02 - Como alterar a cor de fundo da janela gráfica de branca para azul? Apresente o comando.
@@ -23,7 +23,7 @@
   
   Gerando o resultado:
   
-  <img src="assets/img/img01-ex02.png" width="150">
+  ![img-1](assets/img/img01-ex02.png)
 
   ---
   ### Questão 03 - Desenhe um quadrado a partir da junção de 4 linhas. Apresente o trecho de código. Na sequência, desenhe um quadrado similar (mesmo valor de lado) por meio da substituição de `glBegin(GL_LINES);` por `glBegin(GL_QUADS);`.
@@ -37,16 +37,36 @@
     glVertex2i(50, 50);  glVertex2i(50, 200);    // LADO ESQUERDO
   ```
   O resultado gerado pelas linhas acima foi:
-  
-  <img src="assets/img/img01-ex03.png" width="150">
+  ![img-1](assets/img/img01-ex03.png)
 
   Para finalizar, agora devemos substituir o comando `glBegin(GL_LINES);` por `glBegin(GL_QUADS);`, gerando o resultado:
   
-  <img src="assets/img/img02-ex03.png" width="150">
+  ![img-1](assets/img/img02-ex03.png)
 
   ---
   ### Questão 04 - Qual comando deve ser utilizado, e em que posição devo incluí-lo, para preencher o quadrado com a cor vermelho?
+  Para poder mudar a cor de fundo para vermelho, deva-se usar a *função* `glClearColor(1, 0, 0, 1.0);`, estando após a *função* `glutCreateWindow`, assim ao inicializar a janela setar o *background*.
+
+  ![img-1](assets/img/img01-ex04.png)
+
+  ![img-2](assets/img/img02-ex04.png)
+  O trecho de código onde é realizado esta operação, pode ser observado nas linhas `16` e `26`.
 
 
   ----
   ### Questão 05 - Qual tecla deve ser escolhida para encerrar o programa? Altere esse trecho de código de modo que o programa seja encerrado teclando “e” ou “E”.
+  O código original, conta com a tecla `esc`(27) para encerrar o programa, assim para funcionar com as teclas `e`(101) e `E`(69), foi necessario adicionar ao `case` do `switch` tais condições(segue o código e na imagem abaixo das linhas 42 à 51).
+
+  ```C++
+  void keyboard(unsigned char key, int x, int y){
+    switch (key) {
+    case 69: 
+    case 101: 
+    case 27:
+      exit(0);
+      break;
+    }
+  }
+  ```
+
+  ![img-1](assets/img/img01-ex05.png)
