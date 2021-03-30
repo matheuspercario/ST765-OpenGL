@@ -31,7 +31,7 @@ void display(void)
 {
   int i;
   glClear(GL_COLOR_BUFFER_BIT);               // limpa a janela
-  glColor3f (0.0, 0.0, 0.0);                  // cor da linha
+  glColor3f (1.0, 0.0, 0.0);                  // cor da linha
   glLineWidth(4.0); 
   //glBegin(GL_LINES);
   glBegin(GL_QUADS);  // #QUESTAO 3
@@ -46,6 +46,8 @@ void display(void)
 
 void keyboard(unsigned char key, int x, int y){
   switch (key) {
+  case 69:
+  case 101:	
   case 27:                        // tecla Esc (encerra o programa)
 	exit(0);
 	break;
