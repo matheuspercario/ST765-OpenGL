@@ -10,9 +10,9 @@ void keyboard(unsigned char key, int x, int y);
 int main(int argc, char** argv){
   glutInit(&argc, argv);                         // inicializa o glut
   glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);  // especifica uso de cores e buffers
-  glutInitWindowSize (256, 256);                 // especifica as dimensoes da janela
+  glutInitWindowSize (512, 512);                 // especifica as dimensoes da janela
   glutInitWindowPosition (100, 100);             // especifica aonde a janela aparece na tela
-  glutCreateWindow ("Desenhando um penguin");     // cria a janela
+  glutCreateWindow ("Desenhando um Pinguim");     // cria a janela
   init();
   glutDisplayFunc(display);               // funcao que sera redesenhada pelo GLUT
   glutKeyboardFunc(keyboard);             // funcoes de teclado
@@ -34,7 +34,7 @@ void display(void)
   glColor3f (1.0, 1.0, 1.0);                  // cor da linha
   glLineWidth(4.0); 
   glBegin(GL_LINES);
-  glVertex2i(40, 200);  glVertex2i(200, 10);  // coordenadas inicial e final da linha 
+  glVertex2i(10, 200);  glVertex2i(50, 200);
   glEnd();
   glFlush();
 }
