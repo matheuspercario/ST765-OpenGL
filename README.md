@@ -19,7 +19,7 @@
   | Exercício | README.md                | Data Entrega |
   | --------- | ------------------------ | ------------ |
   | Linha     | [link](Linha/README.md)  | 30/03/2021   |
-  | Tartaruga | [link](Turtle/README.md) | 18/04/2021   |
+  | Rocket    | [link](Rocket/README.md) | 18/04/2021   |
 
  ### Projetos
   | Projeto | README.md | Data Entrega |
