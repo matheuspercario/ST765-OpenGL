@@ -4,7 +4,7 @@
  * *Created at: 11/04/2021*
  * *File: "penguin.cpp"*
 
- ## Exercício 01 - Penguin
+ ## Exercício 01 - Turtle
   Criar uma cena gráfica com a ilustração de um animal ou objeto em formato de malha triangular. A janela pode ter qualquer tamanho. Veja outros requisitos:
   1. O animal ou objeto deve possuir um "buraco";
   2. Os vértices do animal ou objeto podem estar em um arquivo txt ou no próprio programa C+OpenGL;
@@ -12,13 +12,16 @@
 
  ### Explicação
   Nós optamos por criar a cena gráfica de um pinguim. Logo, para preencher os requisitos:
-  1. Os olhos do pinguim vão ser os "buracos necessários";
-  2. Os vértices dos triângulos que formam o pinguim estarão ...;
-  3. Execute o programa e clique sobre o pinguim para alternar seu estado!
+  1. Os olhos da tartaruga vão ser os "buracos necessários";
+  2. Os vértices dos triângulos que formam a tartaruga estarão ...;
+  3. Execute o programa e clique sobre a tartaruga para alternar seu estado!
 
-  Para estabelecer os vértices do pinguim utilizamos a malha gráfica fornecida pelo professor, veja abaixo:
+  Para estabelecer os vértices da tartaruga utilizamos a malha gráfica fornecida pelo professor, veja abaixo:
 
-  ![img-1](assets/images/malhagrafica.png)
+ | Malha - Contorno                            | Malha - Preenchida                               |
+ | ------------------------------------------- | ------------------------------------------------ |
+ | ![img-1](assets/images/tartaruga-malha.png) | ![img-1](assets/images/tartaruga-preenchida.png) |
+  
 
  ---
  ## Código fonte

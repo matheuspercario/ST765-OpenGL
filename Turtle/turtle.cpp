@@ -12,7 +12,7 @@ int main(int argc, char** argv){
   glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);  // especifica uso de cores e buffers
   glutInitWindowSize (512, 512);                 // especifica as dimensoes da janela
   glutInitWindowPosition (100, 100);             // especifica aonde a janela aparece na tela
-  glutCreateWindow ("Desenhando um Pinguim");     // cria a janela
+  glutCreateWindow ("Desenhando uma Tartaruga");     // cria a janela
   init();
   glutDisplayFunc(display);               // funcao que sera redesenhada pelo GLUT
   glutKeyboardFunc(keyboard);             // funcoes de teclado
@@ -46,5 +46,6 @@ void keyboard(unsigned char key, int x, int y){
 	break;
   }
 }
+
 
 
