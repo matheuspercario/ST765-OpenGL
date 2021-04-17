@@ -4,7 +4,7 @@
  * *Created at: 15/04/2021*
  * *File: "rocket.cpp"*
 
- ## Exercício 01 - Rocket
+ ## Exercício 02 - Rocket
   Criar uma cena gráfica com a ilustração de um animal ou objeto em formato de malha triangular. A janela pode ter qualquer tamanho. Veja outros requisitos:
   1. O animal ou objeto deve possuir um "buraco";
   2. Os vértices do animal ou objeto podem estar em um arquivo txt ou no próprio programa C+OpenGL;
