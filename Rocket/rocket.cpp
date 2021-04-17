@@ -5,6 +5,10 @@
 void init(void);
 void display(void);
 void keyboard(unsigned char key, int x, int y);
+void mouse(int botao, int state, int x, int y);
+
+// Variaveis de controle
+int is_preenchido = 0;
 
 // funcao principal
 int main(int argc, char** argv){
@@ -16,6 +20,7 @@ int main(int argc, char** argv){
   init();
   glutDisplayFunc(display);               // funcao que sera redesenhada pelo GLUT
   glutKeyboardFunc(keyboard);             // funcoes de teclado
+  glutMouseFunc(mouse);
   glutMainLoop();                         // mostra todas as janelas criadas
   return 0;
 }
@@ -31,7 +36,7 @@ void display(void)
 {
   int i;
   glClear(GL_COLOR_BUFFER_BIT);               // limpa a janela
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  // NOTHING = Preenchido
+  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  // NOTHING = Preenchido
   glColor3f (0.0, 0.0, 1.0);                  // cor da linha
   glLineWidth(2.0); 
   glBegin(GL_TRIANGLE_STRIP);
@@ -110,6 +115,24 @@ void keyboard(unsigned char key, int x, int y){
 	exit(0);
 	break;
   }
+}
+
+void mouse(int botao, int state, int x, int y){
+  switch (botao) {
+  case GLUT_LEFT_BUTTON:
+  	if(state == GLUT_DOWN && is_preenchido == 0){
+  		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);  // NOTHING = Preenchido
+  		is_preenchido = 1;
+	}else if(state == GLUT_DOWN){
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);  // NOTHING = Preenchido
+		is_preenchido = 0;
+	}	
+	
+	display();
+	
+	break;
+  }
+    
 }
 
 
