@@ -34,6 +34,9 @@
 #define TORRE_CONTROLE_CABINE_STACKS 10
 #define TORRE_CONTROLE_CABINE_TRANSLACAO_X TORRE_CONTROLE_BASE_TRANSLACAO_X
 #define TORRE_CONTROLE_CABINE_TRANSLACAO_Z 0.0  
+#define TORRE_CONTROLE_TELHADO_ALTURA 20.0 
+#define TORRE_CONTROLE_TELHADO_MARGEM 1.4
+ 
 
 static int rotx = 0;
 static int roty = 0;
@@ -46,7 +49,7 @@ static int roty = 0;
  * Desenha cada portõa de embarque
  *
  * @param quantidades_portoes recebe a quantidade de portões que serão criados para garantir o espaçamento
- * @param portãoo o número do portão pelo qual será impresso
+ * @param portão o número do portão pelo qual será impresso
  */
 void desenhar_portao_embarque(int quantidades_portoes, int portao){
   glPushMatrix();
@@ -70,6 +73,8 @@ void desenhar_portao_embarque(int quantidades_portoes, int portao){
  * @param quantidade_galpoes recebe a quantidade de galpoes criados para gerar espaçaamento necessário para deixar a torre de lado
  */
 void desenhar_torre_controle(int quantidade_galpoes){
+
+  // base da torre
   glPushMatrix();
 
   float 
@@ -90,6 +95,7 @@ void desenhar_torre_controle(int quantidade_galpoes){
 
   glPopMatrix();
   
+  // base onde fica os controladores
   glPushMatrix();  
   glTranslatef (
 	  (GLfloat) TORRE_CONTROLE_CABINE_TRANSLACAO_X, 
@@ -100,6 +106,23 @@ void desenhar_torre_controle(int quantidade_galpoes){
   glutWireCylinder(
   	  (GLdouble) TORRE_CONTROLE_CABINE_RAIO,
 	  (GLdouble) TORRE_CONTROLE_CABINE_ALTURA,
+	  (GLint) TORRE_CONTROLE_CABINE_SLICES,
+	  (GLint) TORRE_CONTROLE_CABINE_STACKS
+  );
+
+  glPopMatrix();
+  
+  // telhado
+  glPushMatrix();  
+  glTranslatef (
+	  (GLfloat) TORRE_CONTROLE_CABINE_TRANSLACAO_X, 
+	  (GLfloat) (CHAO_ALTURA + TORRE_CONTROLE_CABINE_ALTURA + TORRE_CONTROLE_BASE_ALTURA) , 
+	  (GLfloat) t_z
+  );
+  glRotatef ((GLfloat) -90, 1.0, 0.0, 0.0);
+  glutWireCone(
+  	  (GLdouble) TORRE_CONTROLE_CABINE_RAIO * TORRE_CONTROLE_TELHADO_MARGEM,
+	  (GLdouble) TORRE_CONTROLE_TELHADO_ALTURA,
 	  (GLint) TORRE_CONTROLE_CABINE_SLICES,
 	  (GLint) TORRE_CONTROLE_CABINE_STACKS
   );
@@ -137,10 +160,11 @@ void desenhar_portoes(){
  * @param t_z faz a translação do eixo Z
  */
 void desenhar_galpao(int quantidade_galpoes, int galpao){
-  glPushMatrix();
-
   // translação de Y
   float t_z =  ((GALPAO_ESCALONAMENTO_Z + GALPAO_ESPACAMENTO) * galpao) - ((quantidade_galpoes/2) * GALPAO_ESCALONAMENTO_Z);
+
+  // Desenha o galpão
+  glPushMatrix();
 
   glTranslatef (GALPAO_TRANSLACAO_X, CHAO_ALTURA + (GALPAO_ESCALONAMENTO_Y/2), t_z);
   glScalef (GALPAO_ESCALONAMENTO_X, GALPAO_ESCALONAMENTO_Y, GALPAO_ESCALONAMENTO_Z);
