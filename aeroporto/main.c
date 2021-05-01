@@ -18,60 +18,123 @@
 #define PORTOES_ESCALONAMENTO_Y 70.0
 #define PORTOES_ESCALONAMENTO_Z 1000.0
 #define PORTOES_TRANSLACAO_X 600.0
+#define PORTAO_ESCALONAMENTO_X 100
+#define PORTAO_ESCALONAMENTO_Y 20
+#define PORTAO_ESCALONAMENTO_Z 20
+#define PORTAO_TRANSLACAO_X PORTOES_TRANSLACAO_X - (PORTOES_ESCALONAMENTO_X/2) - (PORTAO_ESCALONAMENTO_X/2)
 #define TORRE_CONTROLE_BASE_RAIO 30
-#define TORRE_CONTROLE_BASE_ALTURA 100
+#define TORRE_CONTROLE_BASE_ALTURA 250
 #define TORRE_CONTROLE_BASE_SLICES 10
 #define TORRE_CONTROLE_BASE_STACKS 10
-#define TORRE_CONTROLE_BASE_TRANSLACAO_X GALPAO_ESCALONAMENTO_X
-#define TORRE_CONTROLE_BASE_TRANSLACAO_Z 0.0 
+#define TORRE_CONTROLE_BASE_TRANSLACAO_X GALPAO_TRANSLACAO_X
+#define TORRE_CONTROLE_BASE_TRANSLACAO_Z 0.0
+#define TORRE_CONTROLE_CABINE_RAIO 60
+#define TORRE_CONTROLE_CABINE_ALTURA 60
+#define TORRE_CONTROLE_CABINE_SLICES 10
+#define TORRE_CONTROLE_CABINE_STACKS 10
+#define TORRE_CONTROLE_CABINE_TRANSLACAO_X TORRE_CONTROLE_BASE_TRANSLACAO_X
+#define TORRE_CONTROLE_CABINE_TRANSLACAO_Z 0.0  
 
 static int rotx = 0;
 static int roty = 0;
 
-// TODO: torre de controle e portões de embarque
+/**
+ * Desenha cada portõa de embarque
+ *
+ * @param recebe a quantidade de galpoes criados para gerar espaçamento
+ */
+void desenhar_portao_embarque(int quantidades_portoes, int portao){
+  glPushMatrix();
+
+  // translação de Y
+  float t_z = 
+  	((PORTOES_ESCALONAMENTO_Z/quantidades_portoes) * portao) 
+  		- ((quantidades_portoes/2) * (PORTOES_ESCALONAMENTO_Z/quantidades_portoes));
+
+  glTranslatef (PORTAO_TRANSLACAO_X, CHAO_ALTURA + (PORTOES_ESCALONAMENTO_Y/2), t_z);
+  glScalef (PORTAO_ESCALONAMENTO_X, PORTAO_ESCALONAMENTO_Y, PORTAO_ESCALONAMENTO_Z);
+  glutWireCube (1.0);
+
+  glPopMatrix();
+}
+
 
 /**
  * Desenha a torre de controle
  *
  * @param recebe a quantidade de galpoes criados para gerar espaçamento
  */
-void desenhar_torre_controle(float quantidade_galpoes){
+void desenhar_torre_controle(int quantidade_galpoes){
   glPushMatrix();
 
-  float t_z = - ((quantidade_galpoes/2) * (GALPAO_ESCALONAMENTO_Z * 2));
+  float 
+  	t_z = - ((quantidade_galpoes/2) * (GALPAO_ESCALONAMENTO_Z * 2));
+  
+  glTranslatef (
+	  (GLfloat) TORRE_CONTROLE_BASE_TRANSLACAO_X, 
+	  (GLfloat) (CHAO_ALTURA + (TORRE_CONTROLE_BASE_ALTURA)), 
+	  (GLfloat) t_z
+  );
+  glRotatef ((GLfloat) 90, 1.0, 0.0, 0.0);
+  glutWireCylinder(
+  	  (GLdouble) TORRE_CONTROLE_BASE_RAIO,
+	  (GLdouble) TORRE_CONTROLE_BASE_ALTURA,
+	  (GLint) TORRE_CONTROLE_BASE_SLICES,
+	  (GLint) TORRE_CONTROLE_BASE_STACKS
+  );
 
-  glRotatef ((GLfloat) 90, 0.0, 0.0, 0.0);
-  //glTranslatef (TORRE_CONTROLE_BASE_TRANSLACAO_X, CHAO_ALTURA + (TORRE_CONTROLE_BASE_ALTURA/2), t_z);
-  glutWireCylinder(TORRE_CONTROLE_BASE_RAIO,TORRE_CONTROLE_BASE_ALTURA,TORRE_CONTROLE_BASE_SLICES,TORRE_CONTROLE_BASE_STACKS);
+  glPopMatrix();
+  
+  glPushMatrix();  
+  glTranslatef (
+	  (GLfloat) TORRE_CONTROLE_CABINE_TRANSLACAO_X, 
+	  (GLfloat) (CHAO_ALTURA + TORRE_CONTROLE_CABINE_ALTURA + TORRE_CONTROLE_BASE_ALTURA) , 
+	  (GLfloat) t_z
+  );
+  glRotatef ((GLfloat) 90, 1.0, 0.0, 0.0);
+  glutWireCylinder(
+  	  (GLdouble) TORRE_CONTROLE_CABINE_RAIO,
+	  (GLdouble) TORRE_CONTROLE_CABINE_ALTURA,
+	  (GLint) TORRE_CONTROLE_CABINE_SLICES,
+	  (GLint) TORRE_CONTROLE_CABINE_STACKS
+  );
 
   glPopMatrix();
 }
 
 
 /**
- * Desenha os portões onde haverá cada portão de embarque *
+ * Desenha os portões onde haverá cada portão de embarque
  */
 void desenhar_portoes(){
   glPushMatrix();
 
   glTranslatef (PORTOES_TRANSLACAO_X, CHAO_ALTURA + (PORTOES_ESCALONAMENTO_Y/2), 0.0);
   glScalef (PORTOES_ESCALONAMENTO_X, PORTOES_ESCALONAMENTO_Y, PORTOES_ESCALONAMENTO_Z);
-  glutWireCube (1.0);
-
+  glutWireCube(1.0);
+  
   glPopMatrix();
+  
+  int
+  	i, 
+  	quantidade_portoes = 5;
+  
+  for(i=0;i<quantidade_portoes;i++){
+  	desenhar_portao_embarque(quantidade_portoes,i);
+  }  
 }
 
 /**
- * Desenha um galpÃ£o de acordo com os parÃ¢metros
+ * Desenha um galpão de acordo com os parâmetros
  * 
- * @param t_x faz a translaÃ§Ã£o do eixo X
- * @param t_y faz a translaÃ§Ã£o do eixo Y
- * @param t_z faz a translaÃ§Ã£o do eixo Z
+ * @param t_x faz a translação do eixo X
+ * @param t_y faz a translação do eixo Y
+ * @param t_z faz a translação do eixo Z
  */
 void desenhar_galpao(int quantidade_galpoes, int galpao){
   glPushMatrix();
 
-  // translaÃ§Ã£o de Y
+  // translação de Y
   float t_z =  ((GALPAO_ESCALONAMENTO_Z + GALPAO_ESPACAMENTO) * galpao) - ((quantidade_galpoes/2) * GALPAO_ESCALONAMENTO_Z);
 
   glTranslatef (GALPAO_TRANSLACAO_X, CHAO_ALTURA + (GALPAO_ESCALONAMENTO_Y/2), t_z);
@@ -81,10 +144,11 @@ void desenhar_galpao(int quantidade_galpoes, int galpao){
   glPopMatrix();
 }
 
+
 /**
- * Desenha uma pista de acordo com os parÃ¢metros
+ * Desenha uma pista de acordo com os parâmetros
  * 
- * @param t_x faz a translaÃ§Ã£o do eixo X
+ * @param t_x faz a translação do eixo X
  * @param e_z faz o escalonamento do eixto Z
  */
 void desenhar_pista(float t_x, float e_z){
@@ -113,7 +177,7 @@ void display(void){
   desenhar_pista(-100.0,1940.0);
   desenhar_pista(100.0,1495.0);
 
-  // galpÃµes/hagares
+  // galpões/hagares
   int 
   	qtd_galpoes = 5,
   	i;  
@@ -123,6 +187,7 @@ void display(void){
   // Portões onde ficarão os portões de embarque
   desenhar_portoes();
   
+  // Onde ficará a torre de controle
   desenhar_torre_controle(qtd_galpoes);
 
   glPopMatrix();
@@ -139,21 +204,26 @@ void reshape (int w, int h){
   glTranslatef (0.0, -200.0, -1500.0);
 }
 void keyboard(unsigned char key, int x, int y){
+		
   switch (key) {
-  case 'r':
-    roty = (roty + 5) % 360;
+  case 'a':
+  case 'A':
+    roty = (roty + 2) % 360;
     glutPostRedisplay();
     break;
-  case 'R':
-    roty = (roty - 5) % 360;
+  case 'd':
+  case 'D':
+    roty = (roty - 2) % 360;
     glutPostRedisplay();
     break;
-   case 'x':
-    rotx = (rotx + 5) % 360;
+   case 'w':
+   case 'W':
+    rotx = (rotx + 1) % 360;
     glutPostRedisplay();
     break;
-  case 'X':
-    rotx = (rotx - 5) % 360;
+  case 's':
+  case 'S':
+    rotx = (rotx - 1) % 360;
     glutPostRedisplay();
     break;
   case 27:                                         // tecla Esc (encerra o programa)
