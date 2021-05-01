@@ -38,10 +38,15 @@
 static int rotx = 0;
 static int roty = 0;
 
+// TODO: 
+// 3) aviao
+// 4) zoom in / zoom out
+
 /**
  * Desenha cada portõa de embarque
  *
- * @param recebe a quantidade de galpoes criados para gerar espaçamento
+ * @param quantidades_portoes recebe a quantidade de portões que serão criados para garantir o espaçamento
+ * @param portãoo o número do portão pelo qual será impresso
  */
 void desenhar_portao_embarque(int quantidades_portoes, int portao){
   glPushMatrix();
@@ -62,7 +67,7 @@ void desenhar_portao_embarque(int quantidades_portoes, int portao){
 /**
  * Desenha a torre de controle
  *
- * @param recebe a quantidade de galpoes criados para gerar espaçamento
+ * @param quantidade_galpoes recebe a quantidade de galpoes criados para gerar espaçaamento necessário para deixar a torre de lado
  */
 void desenhar_torre_controle(int quantidade_galpoes){
   glPushMatrix();
@@ -117,7 +122,7 @@ void desenhar_portoes(){
   
   int
   	i, 
-  	quantidade_portoes = 5;
+  	quantidade_portoes = 5;// deixei 5 por default, mas poderá ser mudado para quantos quiser
   
   for(i=0;i<quantidade_portoes;i++){
   	desenhar_portao_embarque(quantidade_portoes,i);
@@ -184,7 +189,7 @@ void display(void){
   for(i= 0; i < qtd_galpoes;i++){
   	desenhar_galpao(qtd_galpoes,i);
   }  
-  // Portões onde ficarão os portões de embarque
+  // Port?es onde ficar?o os port?es de embarque
   desenhar_portoes();
   
   // Onde ficará a torre de controle
@@ -245,3 +250,4 @@ int main(int argc, char** argv){
   glutMainLoop();
   return 0;
 }
+

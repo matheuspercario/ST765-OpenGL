@@ -24,7 +24,7 @@
  ### Projeto Aeroporto
   | Descrição    | README.md                   | Data Entrega |
   | ------------ | --------------------------- | ------------ |
-  | Modelagem    | [link](aeroporto/README.md) | 05/05/2021   |
+  | Modelagem    | [link](Aeroporto/README.md) | 05/05/2021   |
   | Texturização | xxxxx                       | dd/mm/aaaa   |
   | Iluminação   | xxxxx                       | dd/mm/aaaa   |
  
