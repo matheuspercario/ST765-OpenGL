@@ -35,8 +35,10 @@
 #define TORRE_CONTROLE_CABINE_TRANSLACAO_X TORRE_CONTROLE_BASE_TRANSLACAO_X
 #define TORRE_CONTROLE_CABINE_TRANSLACAO_Z 0.0  
 
-static int rotx = 0;
+static int rotx = 45;
 static int roty = 0;
+
+static float zoom = -1500.0;
 
 // TODO: 
 // 3) aviao
@@ -177,6 +179,8 @@ void display(void){
   glRotatef ((GLfloat) rotx, 1.0, 0.0, 0.0);
   glRotatef ((GLfloat) roty, 0.0, 1.0, 0.0);
   
+  glTranslatef (0.0, zoom, zoom);
+  
   // congonhas tem duas pistas:
   // 1940x45 e 1495x45  
   desenhar_pista(-100.0,1940.0);
@@ -203,10 +207,10 @@ void reshape (int w, int h){
   glViewport (0, 0, (GLsizei) w, (GLsizei) h);
   glMatrixMode (GL_PROJECTION);
   glLoadIdentity ();
-  gluPerspective(65.0, (GLfloat) w/(GLfloat) h, 1.0, 3000.0);
+  gluPerspective(65.0, (GLfloat) w/(GLfloat) h, 1.0, 5000.0);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  glTranslatef (0.0, -200.0, -1500.0);
+  glTranslatef (0.0, -200.0, 0.0);
 }
 void keyboard(unsigned char key, int x, int y){
 		
@@ -237,6 +241,25 @@ void keyboard(unsigned char key, int x, int y){
   }
 }
 
+void mouse(int button, int state, int x, int y)
+{
+	if (state == GLUT_DOWN) {
+	    switch(button) {
+		// Button 3 == SCROLL UP and Button 4  == SCROLL DOWN
+	    case 3:
+	      zoom += 30.0;
+	      glutPostRedisplay();
+	      break;
+	    case 4:
+	      zoom -= 30.0;
+	      glutPostRedisplay();
+	      break;
+	    default:
+	      break;
+	    }
+	  }
+}
+
 int main(int argc, char** argv){
   glutInit(&argc, argv);
   glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB);
@@ -247,6 +270,7 @@ int main(int argc, char** argv){
   glutDisplayFunc(display); 
   glutReshapeFunc(reshape);
   glutKeyboardFunc(keyboard);
+  glutMouseFunc(mouse);
   glutMainLoop();
   return 0;
 }
