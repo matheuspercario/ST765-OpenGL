@@ -28,12 +28,17 @@
 static int rotx = 0;
 static int roty = 0;
 
-// TODO: torre de controle e portıes de embarque
+// TODO: 
+// 1) torre de controle
+// 2) portoes de embarque
+// 3) aviao
+// 4) zoom in / zoom out
+
 
 /**
  * Desenha a torre de controle
  *
- * @param recebe a quantidade de galpoes criados para gerar espaÁamento
+ * @param recebe a quantidade de galpoes criados para gerar espa?amento
  */
 void desenhar_torre_controle(float quantidade_galpoes){
   glPushMatrix();
@@ -42,14 +47,14 @@ void desenhar_torre_controle(float quantidade_galpoes){
 
   glRotatef ((GLfloat) 90, 0.0, 0.0, 0.0);
   //glTranslatef (TORRE_CONTROLE_BASE_TRANSLACAO_X, CHAO_ALTURA + (TORRE_CONTROLE_BASE_ALTURA/2), t_z);
-  glutWireCylinder(TORRE_CONTROLE_BASE_RAIO,TORRE_CONTROLE_BASE_ALTURA,TORRE_CONTROLE_BASE_SLICES,TORRE_CONTROLE_BASE_STACKS);
+  //glutWireCylinder(TORRE_CONTROLE_BASE_RAIO,TORRE_CONTROLE_BASE_ALTURA,TORRE_CONTROLE_BASE_SLICES,TORRE_CONTROLE_BASE_STACKS);
 
   glPopMatrix();
 }
 
 
 /**
- * Desenha os portıes onde haver· cada port„o de embarque *
+ * Desenha os port?es onde haver? cada port?o de embarque *
  */
 void desenhar_portoes(){
   glPushMatrix();
@@ -62,16 +67,16 @@ void desenhar_portoes(){
 }
 
 /**
- * Desenha um galp√£o de acordo com os par√¢metros
+ * Desenha um galp„o de acordo com os par‚metros
  * 
- * @param t_x faz a transla√ß√£o do eixo X
- * @param t_y faz a transla√ß√£o do eixo Y
- * @param t_z faz a transla√ß√£o do eixo Z
+ * @param t_x faz a translaÁ„o do eixo X
+ * @param t_y faz a translaÁ„o do eixo Y
+ * @param t_z faz a translaÁ„o do eixo Z
  */
 void desenhar_galpao(int quantidade_galpoes, int galpao){
   glPushMatrix();
 
-  // transla√ß√£o de Y
+  // translaÁ„o de Y
   float t_z =  ((GALPAO_ESCALONAMENTO_Z + GALPAO_ESPACAMENTO) * galpao) - ((quantidade_galpoes/2) * GALPAO_ESCALONAMENTO_Z);
 
   glTranslatef (GALPAO_TRANSLACAO_X, CHAO_ALTURA + (GALPAO_ESCALONAMENTO_Y/2), t_z);
@@ -82,9 +87,9 @@ void desenhar_galpao(int quantidade_galpoes, int galpao){
 }
 
 /**
- * Desenha uma pista de acordo com os par√¢metros
+ * Desenha uma pista de acordo com os par‚metros
  * 
- * @param t_x faz a transla√ß√£o do eixo X
+ * @param t_x faz a translaÁ„o do eixo X
  * @param e_z faz o escalonamento do eixto Z
  */
 void desenhar_pista(float t_x, float e_z){
@@ -113,14 +118,14 @@ void display(void){
   desenhar_pista(-100.0,1940.0);
   desenhar_pista(100.0,1495.0);
 
-  // galp√µes/hagares
+  // galpıes/hagares
   int 
   	qtd_galpoes = 5,
   	i;  
   for(i= 0; i < qtd_galpoes;i++){
   	desenhar_galpao(qtd_galpoes,i);
   }  
-  // Portıes onde ficar„o os portıes de embarque
+  // Port?es onde ficar?o os port?es de embarque
   desenhar_portoes();
   
   desenhar_torre_controle(qtd_galpoes);
@@ -175,3 +180,4 @@ int main(int argc, char** argv){
   glutMainLoop();
   return 0;
 }
+

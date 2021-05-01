@@ -1,6 +1,6 @@
 [Project]
-FileName=aeroporto.dev
-Name=Projeto1
+FileName=Aeroporto.dev
+Name=Aeroporto
 Type=1
 Ver=2
 ObjFiles=
@@ -12,14 +12,14 @@ MakeIncludes=
 Compiler=
 CppCompiler=
 Linker=-lopengl32_@@_-lfreeglut_@@_-lglu32_@@_
-IsCpp=0
+IsCpp=1
 Icon=
 ExeOutput=
 ObjectOutput=
 LogOutput=
 LogOutputEnabled=0
 OverrideOutput=0
-OverrideOutputName=Projeto1.exe
+OverrideOutputName=Aeroporto.exe
 HostApplication=
 UseCustomMakefile=0
 CustomMakefile=
@@ -51,8 +51,8 @@ AutoIncBuildNr=0
 SyncProduct=1
 
 [Unit1]
-FileName=..\..\gunicamp\unicamp\7-sem\cg\quarto\quarto.c
-CompileCpp=0
+FileName=aeroporto.cpp
+CompileCpp=1
 Folder=
 Compile=1
 Link=1
