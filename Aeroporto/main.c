@@ -5,9 +5,16 @@
  *  Medidas dadas em Metros
  */
 #define CHAO_ALTURA 0.1
+
+
+#define AVIAO_TRANSLACAO_X -100.0
+#define AVIAO_TRANSLACAO_Y -50.0
+#define AVIAO_TRANSLACAO_Z -700.0
+#define CHAO_ESCALONAMENTO_X 2000.0
+#define CHAO_ESCALONAMENTO_Z 2500.0
 #define PISTA_TRANSLACAO_Y 0.0
 #define PISTA_TRANSLACAO_Z 0.0 
-#define PISTA_ESCALONAMENTO_X 45.0
+#define PISTA_ESCALONAMENTO_X 100.0
 #define PISTA_ESCALONAMENTO_Y 0.2
 #define GALPAO_ESCALONAMENTO_X 150.0
 #define GALPAO_ESCALONAMENTO_Y 50.5
@@ -44,8 +51,9 @@ static int roty = 0;
 static float zoom = -1500.0;
 
 // TODO: 
-// 3) aviao
-// 4) zoom in / zoom out
+// 1) adicionar preenchimento
+// 2) adicionar cores?
+// **) tetos galpoes
 
 /**
  * Desenha cada portõa de embarque
@@ -167,14 +175,19 @@ void desenhar_galpao(int quantidade_galpoes, int galpao){
 
   // Desenha o galpão
   glPushMatrix();
-
   glTranslatef (GALPAO_TRANSLACAO_X, CHAO_ALTURA + (GALPAO_ESCALONAMENTO_Y/2), t_z);
   glScalef (GALPAO_ESCALONAMENTO_X, GALPAO_ESCALONAMENTO_Y, GALPAO_ESCALONAMENTO_Z);
   glutWireCube (1.0);
-
   glPopMatrix();
+  
+//  // Desenha teto do galpão
+//  glPushMatrix();
+//  //glRotatef (90, 0.0, 1.0, 0.0);
+//  glTranslatef (GALPAO_TRANSLACAO_X, CHAO_ALTURA + (GALPAO_ESCALONAMENTO_Y/2), t_z);
+//  //glScalef (0.0, GALPAO_ESCALONAMENTO_Y, GALPAO_ESCALONAMENTO_Z);
+//  glutWireCylinder(GALPAO_ESCALONAMENTO_Z/2, GALPAO_ESCALONAMENTO_X, 10, 10);
+//  glPopMatrix();
 }
-
 
 /**
  * Desenha uma pista de acordo com os parâmetros
@@ -192,6 +205,67 @@ void desenhar_pista(float t_x, float e_z){
   glPopMatrix();
 }
 
+/**
+ * Desenha o chao da cena de acordo com os parâmetros
+ */
+void desenhar_chao(){
+  glPushMatrix();
+  
+  glScalef (CHAO_ESCALONAMENTO_X, CHAO_ALTURA, CHAO_ESCALONAMENTO_Z);
+  glutWireCube (1.0);
+
+  glPopMatrix();
+}
+
+/**
+ * Desenha o aviao
+ *
+ * @param rot_x faz a rotacao no eixo X (pousando / decolando)
+ * @param rot_y faz a rotacao no eixo Y ()
+ * @param t_x faz a translação do eixo X
+ * @param t_y faz a translação do eixo Y
+ * @param t_z faz a translação do eixo Z
+ */
+void desenhar_aviao(int rot_x, int rot_y, float t_x, float t_y, float t_z){
+	
+  glPushMatrix();
+  
+  // rotacao do aviao 
+  glRotatef (rot_x, 1.0, 0.0, 0.0);
+  glRotatef (rot_y, 0.0, 1.0, 0.0);
+  
+	
+  // Esfera -> corpo do corpo
+  glPushMatrix();
+  glTranslatef (t_x, t_y, t_z);
+  glScalef (1.0, 1.0, 7.0);
+  glutWireSphere (7.0, 16, 16);
+  glPopMatrix();
+  
+  // Asas tras
+  glPushMatrix();
+  glTranslatef (t_x, t_y, t_z - 40);
+  glScalef (30.0, 3.0, 5.0);
+  glutWireCube (1.0);
+  glPopMatrix();
+  
+  // Asas frente
+  glPushMatrix();
+  glTranslatef (t_x, t_y, t_z + 10);
+  glScalef (100.0, 3.0, 10.0);
+  glutWireCube (1.0);
+  glPopMatrix();
+  
+  // Asas (em pe)
+  glPushMatrix();
+  glTranslatef (t_x, t_y + 7, t_z - 40);
+  glScalef (2.0, 7.0, 10.0);
+  glutWireCube (1.0);
+  glPopMatrix();
+  
+  glPopMatrix();
+}
+
 void init(void){
   glClearColor (0.0, 0.0, 0.0, 0.0);
 }
@@ -205,6 +279,9 @@ void display(void){
   
   glTranslatef (0.0, zoom, zoom);
   
+  // Chao da cena gráfica
+  desenhar_chao();
+  
   // congonhas tem duas pistas:
   // 1940x45 e 1495x45  
   desenhar_pista(-100.0,1940.0);
@@ -217,11 +294,18 @@ void display(void){
   for(i= 0; i < qtd_galpoes;i++){
   	desenhar_galpao(qtd_galpoes,i);
   }  
-  // Port?es onde ficar?o os port?es de embarque
+  // Portoes onde ficarao os portoes de embarque
   desenhar_portoes();
   
-  // Onde ficará a torre de controle
+  // Onde ficara a torre de controle
   desenhar_torre_controle(qtd_galpoes);
+  
+  // aviao pousando
+  desenhar_aviao(15, 0, -100.0, -50.0, -700.0); 
+  
+  // aviao decolando
+  desenhar_aviao(20, 180, -100, -10.0, 300.0); 
+  
 
   glPopMatrix();
   glutSwapBuffers();
@@ -241,22 +325,22 @@ void keyboard(unsigned char key, int x, int y){
   switch (key) {
   case 'a':
   case 'A':
-    roty = (roty + 2) % 360;
+    roty = (roty - 2) % 360;
     glutPostRedisplay();
     break;
   case 'd':
   case 'D':
-    roty = (roty - 2) % 360;
+    roty = (roty + 2) % 360;
     glutPostRedisplay();
     break;
    case 'w':
    case 'W':
-    rotx = (rotx + 1) % 360;
+    rotx = (rotx - 1) % 360;
     glutPostRedisplay();
     break;
   case 's':
   case 'S':
-    rotx = (rotx - 1) % 360;
+    rotx = (rotx + 1) % 360;
     glutPostRedisplay();
     break;
   case 27:                                         // tecla Esc (encerra o programa)
