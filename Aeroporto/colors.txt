@@ -11,7 +11,7 @@ glColor4f(0.0f, 1.0f, 1.0f, 1.0f);//light blue
 glColor4f(1.0f, 0.5f, 0.0f, 0.0f);//orange/brown
 glColor3f(0.0f, 1.0f, 0.0f);//Green
 glColor3f(0.0f, 0.5f, 0.0f);//Dark-Green
-glColor3f(0.5f, 1.0f, 0.5f);//Dark-Green
+glColor3f(0.5f, 1.0f, 0.5f);//Light-Green
 glColor3f(0.0f, 0.0f, 1.0f);//Blue
 glColor3f(0.5f, 1.0f, 1.0f);//cyan
 glColor3f(0.0f, 0.0f, 0.0f);//Black
@@ -27,3 +27,4 @@ glColor3f(0.1f, 0.1f, 0.0f);//Bronze
 glColor3f(0.0f, 0.1f, 0.1f);//Dark blue
 glColor3f(0.0f, 0.1f, 0.0f);//Forest Green
 glColor3f(0.1f, 0.0f, 0.0f);//Brown
+glColor3f(0.51f, 0.5f, 0.5f);//Grey
