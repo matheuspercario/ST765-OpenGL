@@ -18,14 +18,15 @@
   Antes de mais nada, nossa cena gráfica tenta representar um aeroporto de grande porte, incluindo duas pistas, vários hangares (galpões em que os aviões são guardados), um portão de embarque com várias rampas, uma torre de controle e, por fim, um avião (teco-teco).
 
   Desse modo, a fim de atender os requisitos propostos pelo professor, os diferentes tipos de **elementos geométricos** escolhidos, foram:
-  - **Cubo:** *Bla bla bla*
-  - **Cilindro:** *Bla bla bla*
-  - **Cone:** *Bla bla bla*
+  - **Cubo:** *Solo, pistas, galpões, portões de embarque, asas dos aviões;*
+  - **Esfera:** *Corpo dos aviões;*
+  - **Cilindro:** *Torre de controle;*
+  - **Cone:** *Cobertura da torre de controle.*
 
  Além disso, o usuário pode interagir com a cena gráfica rotacionando no eixo X e no eixo Y. Isso pode ser um pouco confuso no início, mas ajuda muito na visualização do aeroporto. Ademais, foi preciso também proporcionar ao usuário a possibilidade de dar "*zoom*" na cena gráfica. S seguir estão dispostos os comandos para interação com a cena gráfica:
- - **Rotacionar no eixo X:** *Bla bla bla*
- - **Rotacionar no eixo Y:** *Bla bla bla*
- - **Zoom:**  *Bla bla bla*
+ - **Rotacionar no eixo X:** *A ou D;*
+ - **Rotacionar no eixo Y:** *W ou S;*
+ - **Zoom:**  *Scroll do mouse.*
   
 
  ### Prints da cena:

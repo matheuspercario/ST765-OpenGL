@@ -6,7 +6,6 @@
  */
 #define CHAO_ALTURA 0.1
 
-
 #define AVIAO_TRANSLACAO_X -100.0
 #define AVIAO_TRANSLACAO_Y -50.0
 #define AVIAO_TRANSLACAO_Z -700.0
@@ -63,6 +62,8 @@ static float zoom = -1500.0;
  */
 void desenhar_portao_embarque(int quantidades_portoes, int portao){
   glPushMatrix();
+  
+  glColor3f(0.1f, 0.1f, 0.1f);//Dark grey
 
   // translação de Y
   float t_z = 
@@ -71,7 +72,7 @@ void desenhar_portao_embarque(int quantidades_portoes, int portao){
 
   glTranslatef (PORTAO_TRANSLACAO_X, CHAO_ALTURA + (PORTOES_ESCALONAMENTO_Y/2), t_z);
   glScalef (PORTAO_ESCALONAMENTO_X, PORTAO_ESCALONAMENTO_Y, PORTAO_ESCALONAMENTO_Z);
-  glutWireCube (1.0);
+  glutSolidCube (1.0);
 
   glPopMatrix();
 }
@@ -86,6 +87,8 @@ void desenhar_torre_controle(int quantidade_galpoes){
 
   // base da torre
   glPushMatrix();
+  
+  glColor3f(0.51f, 0.5f, 0.5f);//Grey
 
   float 
   	t_z = - ((quantidade_galpoes/2) * (GALPAO_ESCALONAMENTO_Z * 2));
@@ -96,7 +99,7 @@ void desenhar_torre_controle(int quantidade_galpoes){
 	  (GLfloat) t_z
   );
   glRotatef ((GLfloat) 90, 1.0, 0.0, 0.0);
-  glutWireCylinder(
+  glutSolidCylinder(
   	  (GLdouble) TORRE_CONTROLE_BASE_RAIO,
 	  (GLdouble) TORRE_CONTROLE_BASE_ALTURA,
 	  (GLint) TORRE_CONTROLE_BASE_SLICES,
@@ -113,7 +116,7 @@ void desenhar_torre_controle(int quantidade_galpoes){
 	  (GLfloat) t_z
   );
   glRotatef ((GLfloat) 90, 1.0, 0.0, 0.0);
-  glutWireCylinder(
+  glutSolidCylinder(
   	  (GLdouble) TORRE_CONTROLE_CABINE_RAIO,
 	  (GLdouble) TORRE_CONTROLE_CABINE_ALTURA,
 	  (GLint) TORRE_CONTROLE_CABINE_SLICES,
@@ -130,7 +133,7 @@ void desenhar_torre_controle(int quantidade_galpoes){
 	  (GLfloat) t_z
   );
   glRotatef ((GLfloat) -90, 1.0, 0.0, 0.0);
-  glutWireCone(
+  glutSolidCone(
   	  (GLdouble) TORRE_CONTROLE_CABINE_RAIO * TORRE_CONTROLE_TELHADO_MARGEM,
 	  (GLdouble) TORRE_CONTROLE_TELHADO_ALTURA,
 	  (GLint) TORRE_CONTROLE_CABINE_SLICES,
@@ -146,10 +149,12 @@ void desenhar_torre_controle(int quantidade_galpoes){
  */
 void desenhar_portoes(){
   glPushMatrix();
-
+  
+  glColor3f(0.51f, 0.5f, 0.5f);//Grey
+  
   glTranslatef (PORTOES_TRANSLACAO_X, CHAO_ALTURA + (PORTOES_ESCALONAMENTO_Y/2), 0.0);
   glScalef (PORTOES_ESCALONAMENTO_X, PORTOES_ESCALONAMENTO_Y, PORTOES_ESCALONAMENTO_Z);
-  glutWireCube(1.0);
+  glutSolidCube(1.0);
   
   glPopMatrix();
   
@@ -171,22 +176,26 @@ void desenhar_portoes(){
  */
 void desenhar_galpao(int quantidade_galpoes, int galpao){
   // translação de Y
-  float t_z =  ((GALPAO_ESCALONAMENTO_Z + GALPAO_ESPACAMENTO) * galpao) - ((quantidade_galpoes/2) * GALPAO_ESCALONAMENTO_Z);
+  float t_z = ((GALPAO_ESCALONAMENTO_Z + GALPAO_ESPACAMENTO) * galpao) - ((quantidade_galpoes/2) * GALPAO_ESCALONAMENTO_Z);
 
+
+  // Desenha teto do galpão
+  //  glPushMatrix();
+  //  glTranslatef (GALPAO_TRANSLACAO_X - GALPAO_ESCALONAMENTO_X/2, CHAO_ALTURA + (GALPAO_ESCALONAMENTO_Y/3), t_z);
+  //  glRotatef (90, 0.0, 1.0, 0.0);
+  //  glutSolidCylinder(GALPAO_ESCALONAMENTO_X/2 - 4, GALPAO_ESCALONAMENTO_X, 20, 20);
+  //  glPopMatrix();
+  
+  
   // Desenha o galpão
   glPushMatrix();
+  
+  glColor3f(0.0f, 0.2f, 0.0f);//Forest Green
+  
   glTranslatef (GALPAO_TRANSLACAO_X, CHAO_ALTURA + (GALPAO_ESCALONAMENTO_Y/2), t_z);
   glScalef (GALPAO_ESCALONAMENTO_X, GALPAO_ESCALONAMENTO_Y, GALPAO_ESCALONAMENTO_Z);
-  glutWireCube (1.0);
+  glutSolidCube (1.0);
   glPopMatrix();
-  
-//  // Desenha teto do galpão
-//  glPushMatrix();
-//  //glRotatef (90, 0.0, 1.0, 0.0);
-//  glTranslatef (GALPAO_TRANSLACAO_X, CHAO_ALTURA + (GALPAO_ESCALONAMENTO_Y/2), t_z);
-//  //glScalef (0.0, GALPAO_ESCALONAMENTO_Y, GALPAO_ESCALONAMENTO_Z);
-//  glutWireCylinder(GALPAO_ESCALONAMENTO_Z/2, GALPAO_ESCALONAMENTO_X, 10, 10);
-//  glPopMatrix();
 }
 
 /**
@@ -197,10 +206,12 @@ void desenhar_galpao(int quantidade_galpoes, int galpao){
  */
 void desenhar_pista(float t_x, float e_z){
   glPushMatrix();
+  
+  glColor3f(0.1f, 0.1f, 0.1f);//Dark grey
 
-  glTranslatef (t_x, PISTA_TRANSLACAO_Y, PISTA_TRANSLACAO_Z);
+  glTranslatef (t_x, PISTA_TRANSLACAO_Y + 0.5, PISTA_TRANSLACAO_Z);
   glScalef (PISTA_ESCALONAMENTO_X, PISTA_ESCALONAMENTO_Y, e_z);
-  glutWireCube (1.0);
+  glutSolidCube (1.0);
 
   glPopMatrix();
 }
@@ -211,8 +222,10 @@ void desenhar_pista(float t_x, float e_z){
 void desenhar_chao(){
   glPushMatrix();
   
+  glColor3f(0.0f, 0.5f, 0.0f);//Dark-Green
+  
   glScalef (CHAO_ESCALONAMENTO_X, CHAO_ALTURA, CHAO_ESCALONAMENTO_Z);
-  glutWireCube (1.0);
+  glutSolidCube (1.0);
 
   glPopMatrix();
 }
@@ -230,6 +243,8 @@ void desenhar_aviao(int rot_x, int rot_y, float t_x, float t_y, float t_z){
 	
   glPushMatrix();
   
+  glColor4f(1.0f, 1.0f, 1.0f, 0.0f);//white
+  
   // rotacao do aviao 
   glRotatef (rot_x, 1.0, 0.0, 0.0);
   glRotatef (rot_y, 0.0, 1.0, 0.0);
@@ -239,28 +254,28 @@ void desenhar_aviao(int rot_x, int rot_y, float t_x, float t_y, float t_z){
   glPushMatrix();
   glTranslatef (t_x, t_y, t_z);
   glScalef (1.0, 1.0, 7.0);
-  glutWireSphere (7.0, 16, 16);
+  glutSolidSphere (7.0, 16, 16);
   glPopMatrix();
   
   // Asas tras
   glPushMatrix();
   glTranslatef (t_x, t_y, t_z - 40);
   glScalef (30.0, 3.0, 5.0);
-  glutWireCube (1.0);
+  glutSolidCube (1.0);
   glPopMatrix();
   
   // Asas frente
   glPushMatrix();
   glTranslatef (t_x, t_y, t_z + 10);
   glScalef (100.0, 3.0, 10.0);
-  glutWireCube (1.0);
+  glutSolidCube (1.0);
   glPopMatrix();
   
   // Asas (em pe)
   glPushMatrix();
   glTranslatef (t_x, t_y + 7, t_z - 40);
   glScalef (2.0, 7.0, 10.0);
-  glutWireCube (1.0);
+  glutSolidCube (1.0);
   glPopMatrix();
   
   glPopMatrix();
@@ -268,10 +283,12 @@ void desenhar_aviao(int rot_x, int rot_y, float t_x, float t_y, float t_z){
 
 void init(void){
   glClearColor (0.0, 0.0, 0.0, 0.0);
+  glEnable(GL_DEPTH_TEST);
 }
 
 void display(void){
-  glClear (GL_COLOR_BUFFER_BIT);
+  // glClear (GL_COLOR_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glPushMatrix();
 
   glRotatef ((GLfloat) rotx, 1.0, 0.0, 0.0);
@@ -291,8 +308,8 @@ void display(void){
   int 
   	qtd_galpoes = 5,
   	i;  
-  for(i= 0; i < qtd_galpoes;i++){
-  	desenhar_galpao(qtd_galpoes,i);
+  for(i= 0; i < qtd_galpoes; i++){
+  	desenhar_galpao(qtd_galpoes, i);
   }  
   // Portoes onde ficarao os portoes de embarque
   desenhar_portoes();
@@ -306,6 +323,8 @@ void display(void){
   // aviao decolando
   desenhar_aviao(20, 180, -100, -10.0, 300.0); 
   
+  // aviao portao de embarque
+  desenhar_aviao(0, 90, -50.0, PORTAO_ESCALONAMENTO_Y, 350.0); 
 
   glPopMatrix();
   glutSwapBuffers();
@@ -325,22 +344,22 @@ void keyboard(unsigned char key, int x, int y){
   switch (key) {
   case 'a':
   case 'A':
-    roty = (roty - 2) % 360;
+    roty = (roty - 5) % 360;
     glutPostRedisplay();
     break;
   case 'd':
   case 'D':
-    roty = (roty + 2) % 360;
+    roty = (roty + 5) % 360;
     glutPostRedisplay();
     break;
    case 'w':
    case 'W':
-    rotx = (rotx - 1) % 360;
+    rotx = (rotx - 5) % 360;
     glutPostRedisplay();
     break;
   case 's':
   case 'S':
-    rotx = (rotx + 1) % 360;
+    rotx = (rotx + 5) % 360;
     glutPostRedisplay();
     break;
   case 27:                                         // tecla Esc (encerra o programa)
@@ -370,7 +389,7 @@ void mouse(int button, int state, int x, int y)
 
 int main(int argc, char** argv){
   glutInit(&argc, argv);
-  glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB);
+  glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
   glutInitWindowSize (500, 500); 
   glutInitWindowPosition (100, 100);
   glutCreateWindow (argv[0]);
