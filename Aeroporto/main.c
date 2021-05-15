@@ -1,5 +1,9 @@
 #include<stdlib.h>
+#include <windows.h>
+#include <GL/gl.h>
+#include <GL/glext.h>
 #include<GL/glut.h>
+#include "image.h"
 
 /**
  *  Medidas dadas em Metros
@@ -43,16 +47,82 @@
 #define TORRE_CONTROLE_TELHADO_ALTURA 20.0 
 #define TORRE_CONTROLE_TELHADO_MARGEM 1.4
  
+//TEXTURAS
+#define TEX_GALPAO "tex/galpoes.rgb"
+#define TEX_TORRE "tex/flamengo.rgb"
 
 static int rotx = 45;
 static int roty = 0;
 
 static float zoom = -1500.0;
 
+GLuint textura_torre;
+
 // TODO: 
 // 1) adicionar preenchimento
 // 2) adicionar cores?
 // **) tetos galpoes
+
+void carregar_texturas(void){
+  IMAGE *img;
+  GLenum gluerr;
+
+  /* textura do plano */
+  glGenTextures(1, &textura_torre);
+  glBindTexture(GL_TEXTURE_2D, textura_torre);
+  
+  if(!(img=ImageLoad(TEX_TORRE))) {
+    printf("Error reading a texture.\n");
+    exit(-1);
+  }
+
+  gluerr=gluBuild2DMipmaps(GL_TEXTURE_2D, 3, 
+			   img->sizeX, img->sizeY, 
+			   GL_RGB, GL_UNSIGNED_BYTE, 
+			   (GLvoid *)(img->data));
+  if(gluerr){
+    printf("GLULib%s\n",gluErrorString(gluerr));
+    exit(-1);
+  }
+
+  glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
+  glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+  glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+  glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
+
+}
+
+
+void carregar_textura(char * caminho,GLuint * textura, int n){
+  IMAGE *img;
+  GLenum gluerr;
+
+  /* textura do plano */
+  glGenTextures(n, textura);
+  glBindTexture(GL_TEXTURE_2D, * textura);
+  
+  if(!(img=ImageLoad(caminho))) {
+    printf("Error reading a texture.\n");
+    exit(-1);
+  }
+
+  gluerr=gluBuild2DMipmaps(GL_TEXTURE_2D, 3, 
+			   img->sizeX, img->sizeY, 
+			   GL_RGB, GL_UNSIGNED_BYTE, 
+			   (GLvoid *)(img->data));
+  if(gluerr){
+    printf("GLULib%s\n",gluErrorString(gluerr));
+    exit(-1);
+  }
+
+  glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
+  glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+  glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+  glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
+
+}
 
 /**
  * Desenha cada portõa de embarque
@@ -83,13 +153,21 @@ void desenhar_portao_embarque(int quantidades_portoes, int portao){
  *
  * @param quantidade_galpoes recebe a quantidade de galpoes criados para gerar espaçaamento necessário para deixar a torre de lado
  */
-void desenhar_torre_controle(int quantidade_galpoes){
+void desenhar_torre_controle(int quantidade_galpoes){ 
 
   // base da torre
   glPushMatrix();
   
-  glColor3f(0.51f, 0.5f, 0.5f);//Grey
+  glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
+  glBindTexture(GL_TEXTURE_2D,textura_torre);
+  
+  GLUquadric *quadObj = gluNewQuadric();
+   
+  /* parede - textura*/
 
+  glEnable(GL_TEXTURE_2D); 
+  //glColor3f(1.0f, 1.0f, 1.0f);//Dark grey
+  
   float 
   	t_z = - ((quantidade_galpoes/2) * (GALPAO_ESCALONAMENTO_Z * 2));
   
@@ -99,14 +177,22 @@ void desenhar_torre_controle(int quantidade_galpoes){
 	  (GLfloat) t_z
   );
   glRotatef ((GLfloat) 90, 1.0, 0.0, 0.0);
-  glutSolidCylinder(
+
+  gluCylinder(
+      quadObj,
+  	  (GLdouble) TORRE_CONTROLE_BASE_RAIO,
   	  (GLdouble) TORRE_CONTROLE_BASE_RAIO,
 	  (GLdouble) TORRE_CONTROLE_BASE_ALTURA,
 	  (GLint) TORRE_CONTROLE_BASE_SLICES,
 	  (GLint) TORRE_CONTROLE_BASE_STACKS
   );
+  
+  glDisable(GL_TEXTURE_2D);
 
   glPopMatrix();
+  
+  gluDeleteQuadric(quadObj);
+  glDisable(GL_TEXTURE_2D);
   
   // base onde fica os controladores
   glPushMatrix();  
@@ -140,7 +226,10 @@ void desenhar_torre_controle(int quantidade_galpoes){
 	  (GLint) TORRE_CONTROLE_CABINE_STACKS
   );
 
+  	
+
   glPopMatrix();
+  
 }
 
 
@@ -188,9 +277,7 @@ void desenhar_galpao(int quantidade_galpoes, int galpao){
   
   
   // Desenha o galpão
-  glPushMatrix();
-  
-  glColor3f(0.0f, 0.2f, 0.0f);//Forest Green
+  glPushMatrix(); 
   
   glTranslatef (GALPAO_TRANSLACAO_X, CHAO_ALTURA + (GALPAO_ESCALONAMENTO_Y/2), t_z);
   glScalef (GALPAO_ESCALONAMENTO_X, GALPAO_ESCALONAMENTO_Y, GALPAO_ESCALONAMENTO_Z);
@@ -283,18 +370,31 @@ void desenhar_aviao(int rot_x, int rot_y, float t_x, float t_y, float t_z){
 
 void init(void){
   glClearColor (0.0, 0.0, 0.0, 0.0);
+  carregar_textura(TEX_TORRE,&textura_torre,1);
+  glShadeModel(GL_FLAT);
   glEnable(GL_DEPTH_TEST);
 }
 
 void display(void){
-  // glClear (GL_COLOR_BUFFER_BIT);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+  glClearColor (0.0, 0.0, 0.0, 0.0);
   glPushMatrix();
 
   glRotatef ((GLfloat) rotx, 1.0, 0.0, 0.0);
   glRotatef ((GLfloat) roty, 0.0, 1.0, 0.0);
   
   glTranslatef (0.0, zoom, zoom);
+  
+  // galpões/hagares
+  int 
+  	qtd_galpoes = 5,
+  	i;  
+
+  // Onde ficara a torre de controle
+  desenhar_torre_controle(qtd_galpoes);
+  for(i= 0; i < qtd_galpoes; i++){
+  	desenhar_galpao(qtd_galpoes, i);
+  }
   
   // Chao da cena gráfica
   desenhar_chao();
@@ -304,18 +404,11 @@ void display(void){
   desenhar_pista(-100.0,1940.0);
   desenhar_pista(100.0,1495.0);
 
-  // galpões/hagares
-  int 
-  	qtd_galpoes = 5,
-  	i;  
-  for(i= 0; i < qtd_galpoes; i++){
-  	desenhar_galpao(qtd_galpoes, i);
-  }  
+    
   // Portoes onde ficarao os portoes de embarque
   desenhar_portoes();
   
-  // Onde ficara a torre de controle
-  desenhar_torre_controle(qtd_galpoes);
+  
   
   // aviao pousando
   desenhar_aviao(15, 0, -100.0, -50.0, -700.0); 
@@ -388,6 +481,8 @@ void mouse(int button, int state, int x, int y)
 }
 
 int main(int argc, char** argv){
+  
+  
   glutInit(&argc, argv);
   glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
   glutInitWindowSize (500, 500); 
