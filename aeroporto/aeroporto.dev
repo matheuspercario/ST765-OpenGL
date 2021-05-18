@@ -11,7 +11,7 @@ ResourceIncludes=
 MakeIncludes=
 Compiler=
 CppCompiler=
-Linker=-lopengl32_@@_-lfreeglut_@@_-lglu32_@@_
+Linker=-static-libgcc_@@_-lopengl32_@@_-lfreeglut_@@_-lglu32_@@_
 IsCpp=0
 Icon=
 ExeOutput=
@@ -19,7 +19,7 @@ ObjectOutput=
 LogOutput=
 LogOutputEnabled=0
 OverrideOutput=0
-OverrideOutputName=Projeto1.exe
+OverrideOutputName=aeroporto.exe
 HostApplication=
 UseCustomMakefile=0
 CustomMakefile=
@@ -28,8 +28,8 @@ Folders=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=0000000000000000000000000
-UnitCount=1
+CompilerSettings=0000000000000000001000000
+UnitCount=3
 
 [VersionInfo]
 Major=1
@@ -52,6 +52,26 @@ SyncProduct=1
 
 [Unit1]
 FileName=main.c
+CompileCpp=0
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit2]
+FileName=image.c
+CompileCpp=0
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit3]
+FileName=image.h
 CompileCpp=0
 Folder=
 Compile=1
