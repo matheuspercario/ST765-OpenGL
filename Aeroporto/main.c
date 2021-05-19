@@ -1,8 +1,9 @@
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <windows.h>
 #include <GL/gl.h>
 #include <GL/glext.h>
-#include<GL/glut.h>
+#include <GL/glut.h>
 #include "image.h"
 
 /**
@@ -46,6 +47,8 @@
 #define TORRE_CONTROLE_CABINE_TRANSLACAO_Z 0.0  
 #define TORRE_CONTROLE_TELHADO_ALTURA 20.0 
 #define TORRE_CONTROLE_TELHADO_MARGEM 1.4
+
+#define COORD_TEX_BANNER 1.0
  
 //TEXTURAS
 #define TEX_GALPAO "tex/galpoes.sgi"
@@ -54,6 +57,15 @@
 #define TEX_GRAMA "tex/grass.sgi"
 #define TEX_PAREDE "tex/parede.sgi"
 #define TEX_AVIAO "tex/aviao.sgi"
+#define TEX_BANNER "tex/airport.sgi"
+
+GLfloat planotext[4][2]={
+  {-COORD_TEX_BANNER,-COORD_TEX_BANNER},
+  {+COORD_TEX_BANNER,-COORD_TEX_BANNER},
+  {+COORD_TEX_BANNER,+COORD_TEX_BANNER},
+  {-COORD_TEX_BANNER,+COORD_TEX_BANNER}
+};
+
 
 static int rotx = 45;
 static int roty = 0;
@@ -67,13 +79,9 @@ GLuint textura_grama;
 GLuint textura_parede;
 GLuint textura_aviao;
 
+GLuint textura_banner;
 
-// TODO: 
-// 1) adicionar preenchimento
-// 2) adicionar cores?
-// **) tetos galpoes
-
-void carregar_textura(char * caminho,GLuint * textura, int n){
+void carregar_textura(char * caminho, GLuint * textura, int n){
   IMAGE *img;
   GLenum gluerr;
 
@@ -82,7 +90,7 @@ void carregar_textura(char * caminho,GLuint * textura, int n){
   glBindTexture(GL_TEXTURE_2D, * textura);
   
   if(!(img=ImageLoad(caminho))) {
-    printf("Error reading a texture.\n");
+    //printf("Error reading a texture.\n");
     exit(-1);
   }
 
@@ -91,7 +99,7 @@ void carregar_textura(char * caminho,GLuint * textura, int n){
 			   GL_RGB, GL_UNSIGNED_BYTE, 
 			   (GLvoid *)(img->data));
   if(gluerr){
-    printf("GLULib%s\n",gluErrorString(gluerr));
+    //printf("GLULib%s\n",gluErrorString(gluerr));
     exit(-1);
   }
 
@@ -310,8 +318,56 @@ void desenhar_chao(){
   glutSolidCube (1.0);
 
   glDisable(GL_TEXTURE_2D);
+  
 
   glPopMatrix();  
+}
+
+void tex_grama(){
+  glPushMatrix();
+  
+  glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
+  glBindTexture(GL_TEXTURE_2D, textura_grama);
+  
+  /* habilita~desabilita uso de texturas*/
+  glEnable(GL_TEXTURE_2D);
+  glBegin(GL_QUADS);
+  glTexCoord2fv(planotext[0]);  glVertex3f(-1000,CHAO_ALTURA,1250);
+  glTexCoord2fv(planotext[1]);  glVertex3f(1000,CHAO_ALTURA,1250);
+  glTexCoord2fv(planotext[2]);  glVertex3f(1000,CHAO_ALTURA,-1250);
+  glTexCoord2fv(planotext[3]);  glVertex3f(-1000,CHAO_ALTURA,-1250);
+  glEnd();
+  
+  glDisable(GL_TEXTURE_2D);
+  
+  glPopMatrix();
+}
+
+void tex_asfalto(){
+  glPushMatrix();
+  
+  glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
+  glBindTexture(GL_TEXTURE_2D, textura_asfalto);
+  
+  /* habilita~desabilita uso de texturas*/
+  glEnable(GL_TEXTURE_2D);
+  glBegin(GL_QUADS);
+  glTexCoord2fv(planotext[0]);  glVertex3f(-45-100,1,970);
+  glTexCoord2fv(planotext[1]);  glVertex3f(45-100,1,970);
+  glTexCoord2fv(planotext[2]);  glVertex3f(45-100,1,-970);
+  glTexCoord2fv(planotext[3]);  glVertex3f(-45-100,1,-970);
+  glEnd();
+  
+  glBegin(GL_QUADS);
+  glTexCoord2fv(planotext[0]);  glVertex3f(-45+100,1,725);
+  glTexCoord2fv(planotext[1]);  glVertex3f(45+100,1,725);
+  glTexCoord2fv(planotext[2]);  glVertex3f(45+100,1,-725);
+  glTexCoord2fv(planotext[3]);  glVertex3f(-45+100,1,-725);
+  glEnd();
+  
+  glDisable(GL_TEXTURE_2D);
+  
+  glPopMatrix();
 }
 
 /**
@@ -371,29 +427,25 @@ void desenhar_aviao(int rot_x, int rot_y, float t_x, float t_y, float t_z){
   glPopMatrix();
 }
 
-void init(void){
-  glClearColor (0.0, 0.0, 0.0, 0.0);
-  
-  carregar_textura(TEX_TORRE,&textura_torre,1);
-  carregar_textura(TEX_ASFALTO,&textura_asfalto,1);
-  carregar_textura(TEX_GALPAO,&textura_galpao,1);
-  carregar_textura(TEX_GRAMA,&textura_grama,1);
-  carregar_textura(TEX_AVIAO,&textura_aviao,1);
-  carregar_textura(TEX_PAREDE,&textura_parede,1);
-  
-  glShadeModel(GL_FLAT);
-  glEnable(GL_DEPTH_TEST);
-}
-
 void display(void){
-  glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glClearColor (0.0, 0.0, 0.0, 0.0);
+  
   glPushMatrix();
+  
 
   glRotatef ((GLfloat) rotx, 1.0, 0.0, 0.0);
   glRotatef ((GLfloat) roty, 0.0, 1.0, 0.0);
   
   glTranslatef (0.0, zoom, zoom);
+  
+  
+  // Textura grama
+  tex_grama();
+  
+  // Textura grama
+  tex_asfalto();
   
   // galpões/hagares
   int 
@@ -413,12 +465,9 @@ void display(void){
   // 1940x45 e 1495x45  
   desenhar_pista(-100.0,1940.0);
   desenhar_pista(100.0,1495.0);
-
-    
+  
   // Portoes onde ficarao os portoes de embarque
   desenhar_portoes();
-  
-  
   
   // aviao pousando
   desenhar_aviao(15, 0, -100.0, -50.0, -700.0); 
@@ -442,6 +491,7 @@ void reshape (int w, int h){
   glLoadIdentity();
   glTranslatef (0.0, -200.0, 0.0);
 }
+
 void keyboard(unsigned char key, int x, int y){
 		
   switch (key) {
@@ -471,8 +521,7 @@ void keyboard(unsigned char key, int x, int y){
   }
 }
 
-void mouse(int button, int state, int x, int y)
-{
+void mouse(int button, int state, int x, int y){
 	if (state == GLUT_DOWN) {
 	    switch(button) {
 		// Button 3 == SCROLL UP and Button 4  == SCROLL DOWN
@@ -490,9 +539,22 @@ void mouse(int button, int state, int x, int y)
 	  }
 }
 
+void init(void){
+  glClearColor (0.0, 0.0, 0.0, 0.0);
+  
+  carregar_textura(TEX_TORRE,&textura_torre,1);
+  carregar_textura(TEX_ASFALTO,&textura_asfalto,1);
+  carregar_textura(TEX_GALPAO,&textura_galpao,1);
+  carregar_textura(TEX_GRAMA,&textura_grama,1);
+  carregar_textura(TEX_AVIAO,&textura_aviao,1);
+  carregar_textura(TEX_PAREDE,&textura_parede,1);
+  carregar_textura(TEX_BANNER,&textura_banner,1);
+  
+  glShadeModel(GL_FLAT);
+  glEnable(GL_DEPTH_TEST);
+}
+
 int main(int argc, char** argv){
-  
-  
   glutInit(&argc, argv);
   glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
   glutInitWindowSize (500, 500); 
