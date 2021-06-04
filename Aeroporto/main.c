@@ -48,22 +48,18 @@
 #define TORRE_CONTROLE_TELHADO_ALTURA 20.0 
 #define TORRE_CONTROLE_TELHADO_MARGEM 1.4
 
-#define COORD_TEX_BANNER 1.0
+#define COORD_TEXTURE 1.0
  
 //TEXTURAS
-#define TEX_GALPAO "tex/galpoes.sgi"
-#define TEX_TORRE "tex/torre.sgi"
 #define TEX_ASFALTO "tex/asfalto.sgi"
 #define TEX_GRAMA "tex/grass.sgi"
-#define TEX_PAREDE "tex/parede.sgi"
-#define TEX_AVIAO "tex/aviao.sgi"
-#define TEX_BANNER "tex/airport.sgi"
+
 
 GLfloat planotext[4][2]={
-  {-COORD_TEX_BANNER,-COORD_TEX_BANNER},
-  {+COORD_TEX_BANNER,-COORD_TEX_BANNER},
-  {+COORD_TEX_BANNER,+COORD_TEX_BANNER},
-  {-COORD_TEX_BANNER,+COORD_TEX_BANNER}
+  {-COORD_TEXTURE,-COORD_TEXTURE},
+  {+COORD_TEXTURE,-COORD_TEXTURE},
+  {+COORD_TEXTURE,+COORD_TEXTURE},
+  {-COORD_TEXTURE,+COORD_TEXTURE}
 };
 
 
@@ -72,14 +68,8 @@ static int roty = 0;
 
 static float zoom = -1500.0;
 
-GLuint textura_torre;
-GLuint textura_galpao;
 GLuint textura_asfalto;
 GLuint textura_grama;
-GLuint textura_parede;
-GLuint textura_aviao;
-
-GLuint textura_banner;
 
 void carregar_textura(char * caminho, GLuint * textura, int n){
   IMAGE *img;
@@ -110,6 +100,36 @@ void carregar_textura(char * caminho, GLuint * textura, int n){
   glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
 }
 
+
+// ILUMINACAO
+GLfloat chao_difusa[]    = { 1.0, 1.0, 0.0, 1.0 };
+GLfloat chao_especular[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat chao_brilho[]    = { 50.0 };
+
+GLfloat pista_difusa[]    = { 0.0, 0.0, 1.0, 1.0 };
+GLfloat pista_especular[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat pista_brilho[]    = { 50.0 };
+
+GLfloat torre_difusa[]    = { 0.0, 1.0, 0.0, 1.0 };
+GLfloat torre_especular[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat torre_brilho[]    = { 50.0 };
+
+GLfloat galpao_difusa[]    = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat galpao_especular[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat galpao_brilho[]    = { 50.0 };
+
+GLfloat portao_difusa[]    = { 0.0, 1.0, 0.0, 1.0 };
+GLfloat portao_especular[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat portao_brilho[]    = { 50.0 };
+
+GLfloat aviao_difusa[]    = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat aviao_especular[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat aviao_brilho[]    = { 50.0 };
+
+GLfloat posicao_luz[]    = { 0.0, 3.0, 0.0, 1.0}; // DISTANTE (SOL)
+GLfloat cor_luz[]        = { 1.0, 1.0, 1.0, 1.0};
+GLfloat cor_luz_amb[]    = { 0.3, 0.3, 0.3, 1.0};
+
 /**
  * Desenha cada portõa de embarque
  *
@@ -118,10 +138,6 @@ void carregar_textura(char * caminho, GLuint * textura, int n){
  */
 void desenhar_portao_embarque(int quantidades_portoes, int portao){
   glPushMatrix();
-  
-  glEnable(GL_TEXTURE_2D);     
-  glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
-  glBindTexture(GL_TEXTURE_2D,textura_parede);
   
   glColor3f(0.1f, 0.1f, 0.1f);//Dark grey
 
@@ -133,8 +149,6 @@ void desenhar_portao_embarque(int quantidades_portoes, int portao){
   glTranslatef (PORTAO_TRANSLACAO_X, CHAO_ALTURA + (PORTOES_ESCALONAMENTO_Y/2), t_z);
   glScalef (PORTAO_ESCALONAMENTO_X, PORTAO_ESCALONAMENTO_Y, PORTAO_ESCALONAMENTO_Z);
   glutSolidCube (1.0);
-  
-  glDisable(GL_TEXTURE_2D);
 
   glPopMatrix();
 }
@@ -146,18 +160,17 @@ void desenhar_portao_embarque(int quantidades_portoes, int portao){
  * @param quantidade_galpoes recebe a quantidade de galpoes criados para gerar espaçaamento necessário para deixar a torre de lado
  */
 void desenhar_torre_controle(int quantidade_galpoes){
-  
-  glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
-  glBindTexture(GL_TEXTURE_2D,textura_torre);
-  
+	
+  /* propriedades do material 3 - Torre*/
+  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, pista_difusa);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, pista_especular);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, pista_brilho);
+
   GLUquadric *quadObj = gluNewQuadric();
-   
-  glEnable(GL_TEXTURE_2D); 
-  
+
   glPushMatrix();
   
   // base da torre
-  
   float 
   	t_z = - ((quantidade_galpoes/2) * (GALPAO_ESCALONAMENTO_Z * 2));
   
@@ -176,7 +189,6 @@ void desenhar_torre_controle(int quantidade_galpoes){
 	  (GLint) TORRE_CONTROLE_BASE_SLICES,
 	  (GLint) TORRE_CONTROLE_BASE_STACKS
   );
-  
   
   glPopMatrix(); 
   
@@ -213,9 +225,6 @@ void desenhar_torre_controle(int quantidade_galpoes){
   );	
 
   glPopMatrix();
-  
-  glDisable(GL_TEXTURE_2D);
-  
 }
 
 
@@ -223,17 +232,18 @@ void desenhar_torre_controle(int quantidade_galpoes){
  * Desenha os portões onde haverá cada portão de embarque
  */
 void desenhar_portoes(){
-  glPushMatrix();
+	
+  /* propriedades do material 5 - Portao */
+  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, portao_difusa);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, portao_especular);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, portao_brilho);
   
-  glEnable(GL_TEXTURE_2D);     
-  glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
-  glBindTexture(GL_TEXTURE_2D,textura_parede);
+  glPushMatrix();
   
   glTranslatef (PORTOES_TRANSLACAO_X, CHAO_ALTURA + (PORTOES_ESCALONAMENTO_Y/2), 0.0);
   glScalef (PORTOES_ESCALONAMENTO_X, PORTOES_ESCALONAMENTO_Y, PORTOES_ESCALONAMENTO_Z);
   glutSolidCube(1.0);
   
-  glDisable(GL_TEXTURE_2D);
   glPopMatrix();
   
   int
@@ -253,30 +263,22 @@ void desenhar_portoes(){
  * @param t_z faz a translação do eixo Z
  */
 void desenhar_galpao(int quantidade_galpoes, int galpao){
+	
+  /* propriedades do material 4 - Galpao */
+  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, galpao_difusa);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, galpao_especular);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, galpao_brilho);
+  
   // translação de Y
   float t_z = ((GALPAO_ESCALONAMENTO_Z + GALPAO_ESPACAMENTO) * galpao) - ((quantidade_galpoes/2) * GALPAO_ESCALONAMENTO_Z);
-
-
-  // Desenha teto do galpão
-  //  glPushMatrix();
-  //  glTranslatef (GALPAO_TRANSLACAO_X - GALPAO_ESCALONAMENTO_X/2, CHAO_ALTURA + (GALPAO_ESCALONAMENTO_Y/3), t_z);
-  //  glRotatef (90, 0.0, 1.0, 0.0);
-  //  glutSolidCylinder(GALPAO_ESCALONAMENTO_X/2 - 4, GALPAO_ESCALONAMENTO_X, 20, 20);
-  //  glPopMatrix();
-  
   
   // Desenha o galpão
   glPushMatrix(); 
-  
-  glEnable(GL_TEXTURE_2D);     
-  glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
-  glBindTexture(GL_TEXTURE_2D,textura_galpao);
   
   glTranslatef (GALPAO_TRANSLACAO_X, CHAO_ALTURA + (GALPAO_ESCALONAMENTO_Y/2), t_z);
   glScalef (GALPAO_ESCALONAMENTO_X, GALPAO_ESCALONAMENTO_Y, GALPAO_ESCALONAMENTO_Z);
   glutSolidCube (1.0);
   
-  glDisable(GL_TEXTURE_2D); 
   glPopMatrix();
 }
 
@@ -288,17 +290,10 @@ void desenhar_galpao(int quantidade_galpoes, int galpao){
  */
 void desenhar_pista(float t_x, float e_z){
   glPushMatrix();
-  glEnable(GL_TEXTURE_2D); 
-  //glColor3f(0.9f, 0.9f, 0.9f);//Dark grey
-  
-  glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
-  glBindTexture(GL_TEXTURE_2D,textura_asfalto);
   
   glTranslatef (t_x, PISTA_TRANSLACAO_Y + 0.5, PISTA_TRANSLACAO_Z);
   glScalef (PISTA_ESCALONAMENTO_X, PISTA_ESCALONAMENTO_Y, e_z);
   glutSolidCube (1.0);
- 
-  glDisable(GL_TEXTURE_2D);
 
   glPopMatrix();
 }
@@ -309,21 +304,18 @@ void desenhar_pista(float t_x, float e_z){
 void desenhar_chao(){
   glPushMatrix();
   
-  glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
-  glBindTexture(GL_TEXTURE_2D,textura_grama);
-     
-  glEnable(GL_TEXTURE_2D);  
-    
   glScalef (CHAO_ESCALONAMENTO_X, CHAO_ALTURA, CHAO_ESCALONAMENTO_Z);
   glutSolidCube (1.0);
-
-  glDisable(GL_TEXTURE_2D);
   
-
   glPopMatrix();  
 }
 
 void tex_grama(){
+	
+  /* propriedades do material 1 - Chao*/
+  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, chao_difusa);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, chao_especular);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, chao_brilho);
   glPushMatrix();
   
   glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
@@ -344,6 +336,11 @@ void tex_grama(){
 }
 
 void tex_asfalto(){
+  /* propriedades do material 2 - Pista*/
+  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, pista_difusa);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, pista_especular);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, pista_brilho);
+  
   glPushMatrix();
   
   glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
@@ -352,17 +349,17 @@ void tex_asfalto(){
   /* habilita~desabilita uso de texturas*/
   glEnable(GL_TEXTURE_2D);
   glBegin(GL_QUADS);
-  glTexCoord2fv(planotext[0]);  glVertex3f(-45-100,1,970);
-  glTexCoord2fv(planotext[1]);  glVertex3f(45-100,1,970);
-  glTexCoord2fv(planotext[2]);  glVertex3f(45-100,1,-970);
-  glTexCoord2fv(planotext[3]);  glVertex3f(-45-100,1,-970);
+  glTexCoord2fv(planotext[0]);  glVertex3f(-55-100,1,970);
+  glTexCoord2fv(planotext[1]);  glVertex3f(55-100,1,970);
+  glTexCoord2fv(planotext[2]);  glVertex3f(55-100,1,-970);
+  glTexCoord2fv(planotext[3]);  glVertex3f(-55-100,1,-970);
   glEnd();
   
   glBegin(GL_QUADS);
-  glTexCoord2fv(planotext[0]);  glVertex3f(-45+100,1,725);
-  glTexCoord2fv(planotext[1]);  glVertex3f(45+100,1,725);
-  glTexCoord2fv(planotext[2]);  glVertex3f(45+100,1,-725);
-  glTexCoord2fv(planotext[3]);  glVertex3f(-45+100,1,-725);
+  glTexCoord2fv(planotext[0]);  glVertex3f(-55+100,1,750);
+  glTexCoord2fv(planotext[1]);  glVertex3f(55+100,1,750);
+  glTexCoord2fv(planotext[2]);  glVertex3f(55+100,1,-750);
+  glTexCoord2fv(planotext[3]);  glVertex3f(-55+100,1,-750);
   glEnd();
   
   glDisable(GL_TEXTURE_2D);
@@ -374,18 +371,19 @@ void tex_asfalto(){
  * Desenha o aviao
  *
  * @param rot_x faz a rotacao no eixo X (pousando / decolando)
- * @param rot_y faz a rotacao no eixo Y ()
+ * @param rot_y faz a rotacao no eixo Y
  * @param t_x faz a translação do eixo X
  * @param t_y faz a translação do eixo Y
  * @param t_z faz a translação do eixo Z
  */
 void desenhar_aviao(int rot_x, int rot_y, float t_x, float t_y, float t_z){
 	
+  /* propriedades do material 6 - Aviao */
+  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, aviao_difusa);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, aviao_especular);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, aviao_brilho);
+	
   glPushMatrix();
-  
-  glEnable(GL_TEXTURE_2D);     
-  glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
-  glBindTexture(GL_TEXTURE_2D,textura_aviao);
   
   glColor4f(1.0f, 1.0f, 1.0f, 0.0f);//white
   
@@ -422,24 +420,23 @@ void desenhar_aviao(int rot_x, int rot_y, float t_x, float t_y, float t_z){
   glutSolidCube (1.0);
   glPopMatrix();
   
-  glDisable(GL_TEXTURE_2D);
-  
   glPopMatrix();
 }
 
 void display(void){
 	
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glEnable(GL_LIGHTING);
   glClearColor (0.0, 0.0, 0.0, 0.0);
   
-  glPushMatrix();
+  glShadeModel(GL_SMOOTH);
   
+  glPushMatrix();
 
   glRotatef ((GLfloat) rotx, 1.0, 0.0, 0.0);
   glRotatef ((GLfloat) roty, 0.0, 1.0, 0.0);
   
   glTranslatef (0.0, zoom, zoom);
-  
   
   // Textura grama
   tex_grama();
@@ -454,20 +451,23 @@ void display(void){
 
   // Onde ficara a torre de controle
   desenhar_torre_controle(qtd_galpoes);
+  
   for(i= 0; i < qtd_galpoes; i++){
   	desenhar_galpao(qtd_galpoes, i);
   }
   
   // Chao da cena gráfica
-  desenhar_chao();
+  //desenhar_chao(); // TEXTURA
   
   // congonhas tem duas pistas:
   // 1940x45 e 1495x45  
-  desenhar_pista(-100.0,1940.0);
-  desenhar_pista(100.0,1495.0);
+  //desenhar_pista(-100.0,1940.0); // TEXTURA
+  //desenhar_pista(100.0,1495.0); // TEXTURA
+
   
   // Portoes onde ficarao os portoes de embarque
   desenhar_portoes();
+  
   
   // aviao pousando
   desenhar_aviao(15, 0, -100.0, -50.0, -700.0); 
@@ -542,16 +542,22 @@ void mouse(int button, int state, int x, int y){
 void init(void){
   glClearColor (0.0, 0.0, 0.0, 0.0);
   
-  carregar_textura(TEX_TORRE,&textura_torre,1);
   carregar_textura(TEX_ASFALTO,&textura_asfalto,1);
-  carregar_textura(TEX_GALPAO,&textura_galpao,1);
   carregar_textura(TEX_GRAMA,&textura_grama,1);
-  carregar_textura(TEX_AVIAO,&textura_aviao,1);
-  carregar_textura(TEX_PAREDE,&textura_parede,1);
-  carregar_textura(TEX_BANNER,&textura_banner,1);
   
-  glShadeModel(GL_FLAT);
   glEnable(GL_DEPTH_TEST);
+  
+  // ILUMINACAO
+  glLightfv(GL_LIGHT0, GL_DIFFUSE, cor_luz);
+  glLightfv(GL_LIGHT0, GL_SPECULAR, cor_luz);
+  glLightfv(GL_LIGHT0, GL_AMBIENT, cor_luz_amb);
+  glLightfv(GL_LIGHT0, GL_POSITION, posicao_luz); // DISTANTE (SOL)
+  
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
+
+  glEnable(GL_AUTO_NORMAL);
+  glEnable(GL_NORMALIZE);
 }
 
 int main(int argc, char** argv){
