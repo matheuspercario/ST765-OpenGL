@@ -106,9 +106,9 @@ GLfloat chao_difusa[]    = { 1.0, 1.0, 0.0, 1.0 };
 GLfloat chao_especular[] = { 1.0, 1.0, 1.0, 1.0 };
 GLfloat chao_brilho[]    = { 50.0 };
 
-GLfloat pista_difusa[]    = { 0.0, 0.0, 1.0, 1.0 };
-GLfloat pista_especular[] = { 1.0, 1.0, 1.0, 1.0 };
-GLfloat pista_brilho[]    = { 50.0 };
+GLfloat pista_difusa[]    = { 0.0, 0.0, 0.0, 0.0 };
+GLfloat pista_especular[] = { 0.15, 0.1, 0.1, 0.21 };
+GLfloat pista_brilho[]    = { 0.5 };
 
 GLfloat torre_difusa[]    = { 0.0, 1.0, 0.0, 1.0 };
 GLfloat torre_especular[] = { 1.0, 1.0, 1.0, 1.0 };
@@ -336,15 +336,17 @@ void tex_grama(){
 }
 
 void tex_asfalto(){
-  /* propriedades do material 2 - Pista*/
+  /* propriedades do material 2 - Pista*/  
+  glPushMatrix();
+  
   glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, pista_difusa);
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, pista_especular);
   glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, pista_brilho);
   
-  glPushMatrix();
-  
-  glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
+  glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_BLEND);
   glBindTexture(GL_TEXTURE_2D, textura_asfalto);
+  
+  
   
   /* habilita~desabilita uso de texturas*/
   glEnable(GL_TEXTURE_2D);
