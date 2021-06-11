@@ -97,36 +97,40 @@ void carregar_textura(char * caminho, GLuint * textura, int n){
   glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
   glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR);
   glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-  glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 }
 
 
 // ILUMINACAO
-GLfloat chao_difusa[]    = { 1.0, 1.0, 0.0, 1.0 };
-GLfloat chao_especular[] = { 1.0, 1.0, 1.0, 1.0 };
-GLfloat chao_brilho[]    = { 50.0 };
+GLfloat chao_difusa[]    = { 0.2, 1.0, 0.0, 0.5 };
+GLfloat chao_especular[] = { 0.5, 1.0, 0.0, 0.0 };
+GLfloat chao_brilho[]    = { 0.1 };
 
 GLfloat pista_difusa[]    = { 0.0, 0.0, 0.0, 0.0 };
 GLfloat pista_especular[] = { 0.15, 0.1, 0.1, 0.21 };
 GLfloat pista_brilho[]    = { 0.5 };
 
-GLfloat torre_difusa[]    = { 0.0, 1.0, 0.0, 1.0 };
-GLfloat torre_especular[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat torre_difusa[]    = { 0.5, 0.5, 0.5, 1.0 };
+GLfloat torre_especular[] = { 0.5, 0.5, 0.5, 0.0 };
 GLfloat torre_brilho[]    = { 50.0 };
 
-GLfloat galpao_difusa[]    = { 1.0, 1.0, 1.0, 1.0 };
-GLfloat galpao_especular[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat galpao_difusa[]    = { 0.0, 0.5, 0.7, 1.0 };
+GLfloat galpao_especular[] = { 0.0, 0.0, 0.7, 0.0 };
 GLfloat galpao_brilho[]    = { 50.0 };
 
-GLfloat portao_difusa[]    = { 0.0, 1.0, 0.0, 1.0 };
-GLfloat portao_especular[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat portao_difusa[]    = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat portao_especular[] = { 1.0, 1.0, 1.0, 0.0 };
 GLfloat portao_brilho[]    = { 50.0 };
 
-GLfloat aviao_difusa[]    = { 1.0, 1.0, 1.0, 1.0 };
-GLfloat aviao_especular[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat portao_embarque_difusa[]    = { 0.5, 0.5, 0.5, 1.0 };
+GLfloat portao_embarque_especular[] = { 0.5, 0.5, 0.5, 0.0 };
+GLfloat portao_embarque_brilho[]    = { 50.0 };
+
+GLfloat aviao_difusa[]    = { 1.0, 0.8, 0.0, 0.5 };
+GLfloat aviao_especular[] = { 1.0, 0.8, 0.0, 1.0 };
 GLfloat aviao_brilho[]    = { 50.0 };
 
-GLfloat posicao_luz[]    = { 0.0, 3.0, 0.0, 1.0}; // DISTANTE (SOL)
+GLfloat posicao_luz[]    = { 150.0, 250.0, 100.0, 1.0}; // DISTANTE (SOL)
 GLfloat cor_luz[]        = { 1.0, 1.0, 1.0, 1.0};
 GLfloat cor_luz_amb[]    = { 0.3, 0.3, 0.3, 1.0};
 
@@ -138,6 +142,11 @@ GLfloat cor_luz_amb[]    = { 0.3, 0.3, 0.3, 1.0};
  */
 void desenhar_portao_embarque(int quantidades_portoes, int portao){
   glPushMatrix();
+  
+  /* propriedades do material 5 - Portao */
+  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, portao_embarque_difusa);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, portao_embarque_especular);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, portao_embarque_brilho);
   
   glColor3f(0.1f, 0.1f, 0.1f);//Dark grey
 
@@ -160,15 +169,15 @@ void desenhar_portao_embarque(int quantidades_portoes, int portao){
  * @param quantidade_galpoes recebe a quantidade de galpoes criados para gerar espaçaamento necessário para deixar a torre de lado
  */
 void desenhar_torre_controle(int quantidade_galpoes){
-	
-  /* propriedades do material 3 - Torre*/
-  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, pista_difusa);
-  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, pista_especular);
-  glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, pista_brilho);
 
   GLUquadric *quadObj = gluNewQuadric();
 
   glPushMatrix();
+  
+  /* propriedades do material 3 - Torre*/
+  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, torre_difusa);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, torre_especular);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, torre_brilho);
   
   // base da torre
   float 
@@ -232,13 +241,13 @@ void desenhar_torre_controle(int quantidade_galpoes){
  * Desenha os portões onde haverá cada portão de embarque
  */
 void desenhar_portoes(){
-	
+  
+  glPushMatrix();
+  
   /* propriedades do material 5 - Portao */
   glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, portao_difusa);
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, portao_especular);
   glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, portao_brilho);
-  
-  glPushMatrix();
   
   glTranslatef (PORTOES_TRANSLACAO_X, CHAO_ALTURA + (PORTOES_ESCALONAMENTO_Y/2), 0.0);
   glScalef (PORTOES_ESCALONAMENTO_X, PORTOES_ESCALONAMENTO_Y, PORTOES_ESCALONAMENTO_Z);
@@ -263,17 +272,17 @@ void desenhar_portoes(){
  * @param t_z faz a translação do eixo Z
  */
 void desenhar_galpao(int quantidade_galpoes, int galpao){
-	
-  /* propriedades do material 4 - Galpao */
-  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, galpao_difusa);
-  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, galpao_especular);
-  glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, galpao_brilho);
   
   // translação de Y
   float t_z = ((GALPAO_ESCALONAMENTO_Z + GALPAO_ESPACAMENTO) * galpao) - ((quantidade_galpoes/2) * GALPAO_ESCALONAMENTO_Z);
   
   // Desenha o galpão
   glPushMatrix(); 
+  
+  /* propriedades do material 4 - Galpao */
+  glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, galpao_difusa);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, galpao_especular);
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, galpao_brilho);
   
   glTranslatef (GALPAO_TRANSLACAO_X, CHAO_ALTURA + (GALPAO_ESCALONAMENTO_Y/2), t_z);
   glScalef (GALPAO_ESCALONAMENTO_X, GALPAO_ESCALONAMENTO_Y, GALPAO_ESCALONAMENTO_Z);
@@ -312,13 +321,14 @@ void desenhar_chao(){
 
 void tex_grama(){
 	
+  glPushMatrix();
+  
   /* propriedades do material 1 - Chao*/
   glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, chao_difusa);
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, chao_especular);
   glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, chao_brilho);
-  glPushMatrix();
   
-  glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
+  glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
   glBindTexture(GL_TEXTURE_2D, textura_grama);
   
   /* habilita~desabilita uso de texturas*/
@@ -350,6 +360,7 @@ void tex_asfalto(){
   
   /* habilita~desabilita uso de texturas*/
   glEnable(GL_TEXTURE_2D);
+  
   glBegin(GL_QUADS);
   glTexCoord2fv(planotext[0]);  glVertex3f(-55-100,1,970);
   glTexCoord2fv(planotext[1]);  glVertex3f(55-100,1,970);
@@ -380,12 +391,12 @@ void tex_asfalto(){
  */
 void desenhar_aviao(int rot_x, int rot_y, float t_x, float t_y, float t_z){
 	
+  glPushMatrix();
+  
   /* propriedades do material 6 - Aviao */
   glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, aviao_difusa);
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, aviao_especular);
   glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, aviao_brilho);
-	
-  glPushMatrix();
   
   glColor4f(1.0f, 1.0f, 1.0f, 0.0f);//white
   
