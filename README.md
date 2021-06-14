@@ -22,9 +22,8 @@
   | Rocket    | [link](Rocket/README.md) | 18/04/2021   |
 
  ### Projeto Aeroporto
-  | Descrição    | README.md                           | Data Entrega |
-  | ------------ | ----------------------------------- | ------------ |
-  | Modelagem    | [link](Aeroporto/README.md)         | 05/05/2021   |
-  | Texturização | [link](Aeroporto/README-texture.md) | 18/05/2021   |
-  | Iluminação   | xxxxx                               | dd/mm/aaaa   |
- 
+  | Descrição    | README.md                                | Data Entrega |
+  | ------------ | -----------------------------------      | ------------ |
+  | Modelagem    | [link](Aeroporto/README.md)              | 05/05/2021   |
+  | Texturização | [link](Aeroporto/README-texture.md)      | 18/05/2021   |
+  | Iluminação   | [link](Aeroporto/README-iluminacao.md)   | 10/06/2021   |
