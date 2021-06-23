@@ -47,6 +47,18 @@
 #define TORRE_CONTROLE_CABINE_TRANSLACAO_Z 0.0  
 #define TORRE_CONTROLE_TELHADO_ALTURA 20.0 
 #define TORRE_CONTROLE_TELHADO_MARGEM 1.4
+#define RADAR_BASE_RAIO 20
+#define RADAR_BASE_ALTURA 150
+#define RADAR_BASE_SLICES 10
+#define RADAR_BASE_STACKS 10
+#define RADAR_BASE_TRANSLACAO_X PORTOES_TRANSLACAO_X
+#define RADAR_BASE_TRANSLACAO_Z 800.0
+#define RADAR_PLATAFORMA_ESCALONAMENTO_X 100.0
+#define RADAR_PLATAFORMA_ESCALONAMENTO_Y 10.0
+#define RADAR_PLATAFORMA_ESCALONAMENTO_Z RADAR_PLATAFORMA_ESCALONAMENTO_X
+#define RADAR_TELA_ESCALONAMENTO_X 200.0
+#define RADAR_TELA_ESCALONAMENTO_Y 50.0
+#define RADAR_TELA_ESCALONAMENTO_Z 5.0
 
 #define COORD_TEXTURE 1.0
  
@@ -83,6 +95,10 @@ int   av2_rot_y = 180;
 float av2_t_x =   -100;
 float av2_t_y =   0;
 float av2_t_z =   -700;
+
+// giro radar
+float radar_rot_y = 0.0;
+
 
 void carregar_textura(char * caminho, GLuint * textura, int n){
   IMAGE *img;
@@ -139,6 +155,14 @@ GLfloat portao_embarque_difusa[]    = { 0.5, 0.5, 0.5, 1.0 };
 GLfloat portao_embarque_especular[] = { 0.5, 0.5, 0.5, 0.0 };
 GLfloat portao_embarque_brilho[]    = { 50.0 };
 
+GLfloat radar_base_difusa[]    = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat radar_base_especular[] = { 1.0, 1.0, 1.0, 0.0 };
+GLfloat radar_base_brilho[]    = { 50.0 };
+
+GLfloat radar_tela_difusa[]    = { 1.0, 0.5, 0.0, 1.0 };
+GLfloat radar_tela_especular[] = { 1.0, 0.5, 0.0, 0.0 };
+GLfloat radar_tela_brilho[]    = { 50.0 };
+
 GLfloat aviao_difusa[]    = { 1.0, 0.8, 0.0, 0.5 };
 GLfloat aviao_especular[] = { 1.0, 0.8, 0.0, 1.0 };
 GLfloat aviao_brilho[]    = { 50.0 };
@@ -173,6 +197,105 @@ void desenhar_portao_embarque(int quantidades_portoes, int portao){
   glutSolidCube (1.0);
 
   glPopMatrix();
+}
+
+
+/**
+ * Desenha o radar da torre
+ *
+ * @param quantidade_galpoes recebe a quantidade de galpoes criados para gerar espaçaamento e alinhar tudo
+ */
+void desenhar_radar(float radar_rot_y){
+
+	GLUquadric *quadObj = gluNewQuadric();
+	
+	glPushMatrix();  
+	
+	/* propriedades do material - Radar Base */
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, radar_base_difusa);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, radar_base_especular);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, radar_base_brilho);	
+	
+	// BASE
+	glPushMatrix();  	
+	glTranslatef (
+	  (GLfloat) RADAR_BASE_TRANSLACAO_X, 
+	  (GLfloat) (CHAO_ALTURA), 
+	  (GLfloat) RADAR_BASE_TRANSLACAO_Z
+  	);
+  	glRotatef ((GLfloat) -90, 1.0, 0.0, 0.0);
+  	gluCylinder(
+      quadObj,
+  	  (GLdouble) RADAR_BASE_RAIO,
+  	  (GLdouble) RADAR_BASE_RAIO,
+	  (GLdouble) RADAR_BASE_ALTURA,
+	  (GLint) RADAR_BASE_SLICES,
+	  (GLint) RADAR_BASE_STACKS
+	);
+	glPopMatrix();  
+	
+	// PLATAFORMA
+	glPushMatrix();  	
+	glTranslatef (
+	  (GLfloat) RADAR_BASE_TRANSLACAO_X, 
+	  (GLfloat) (CHAO_ALTURA) + RADAR_BASE_ALTURA + RADAR_PLATAFORMA_ESCALONAMENTO_Y, 
+	  (GLfloat) RADAR_BASE_TRANSLACAO_Z
+  	);
+  	glScalef (RADAR_PLATAFORMA_ESCALONAMENTO_X, RADAR_PLATAFORMA_ESCALONAMENTO_Y, RADAR_PLATAFORMA_ESCALONAMENTO_Z);
+  	glutSolidCube(1.0);
+  	glPopMatrix();
+  	
+  	// HASTE
+  	glPushMatrix(); 
+  	glTranslatef (
+	  (GLfloat) RADAR_BASE_TRANSLACAO_X, 
+	  (GLfloat) (CHAO_ALTURA) + RADAR_BASE_ALTURA * 0.9, 
+	  (GLfloat) RADAR_BASE_TRANSLACAO_Z
+  	);
+  	glRotatef ((GLfloat) -90, 1.0, 0.0, 0.0);
+  	
+  	gluCylinder(
+      quadObj,
+  	  (GLdouble) RADAR_BASE_RAIO / 5,
+  	  (GLdouble) RADAR_BASE_RAIO / 5,
+	  (GLdouble) RADAR_BASE_ALTURA,
+	  (GLint) RADAR_BASE_SLICES,
+	  (GLint) RADAR_BASE_STACKS
+	);
+  	glPopMatrix();
+  	
+  	
+  	/* propriedades do material - Radar Base */
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, radar_tela_difusa);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, radar_tela_especular);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, radar_tela_brilho);	
+  	
+  	// GIRO 1
+	glPushMatrix();  	
+	glTranslatef (
+	  (GLfloat) RADAR_BASE_TRANSLACAO_X, 
+	  (GLfloat) (CHAO_ALTURA) + RADAR_BASE_ALTURA + RADAR_BASE_ALTURA * 0.4, 
+	  (GLfloat) RADAR_BASE_TRANSLACAO_Z
+  	);
+  	glRotatef ((GLfloat) radar_rot_y, 0.0, 1.0, 0.0);
+  	glScalef (RADAR_TELA_ESCALONAMENTO_X, RADAR_TELA_ESCALONAMENTO_Y, RADAR_TELA_ESCALONAMENTO_Z);
+  	glutSolidCube(1.0);
+  	glPopMatrix();
+  	
+  	// GIRO 2
+	glPushMatrix();  	
+	glTranslatef (
+	  (GLfloat) RADAR_BASE_TRANSLACAO_X, 
+	  (GLfloat) (CHAO_ALTURA) + RADAR_BASE_ALTURA + RADAR_BASE_ALTURA * 0.8, 
+	  (GLfloat) RADAR_BASE_TRANSLACAO_Z
+  	);
+  	glRotatef ((GLfloat) radar_rot_y + 90, 0.0, 1.0, 0.0);
+  	glScalef (RADAR_TELA_ESCALONAMENTO_X, RADAR_TELA_ESCALONAMENTO_Y * 0.6, RADAR_TELA_ESCALONAMENTO_Z);
+  	glutSolidCube(1.0);
+  	glPopMatrix();
+  
+  	glPopMatrix();
+
 }
 
 
@@ -448,23 +571,9 @@ void desenhar_aviao(int rot_x, int rot_y, float t_x, float t_y, float t_z){
   
   glPopMatrix();
 }
-/**
-// avião pousando
-int   av1_rot_x = 15;
-int   av1_rot_y = 0; 
-float av1_t_x = -100.0;
-float av1_t_y = 200.0;
-float av1_t_z = -1500.0;
 
-// avião decolando
-int   av2_rot_x = 0;
-int   av2_rot_y = 180; 
-float av2_t_x =   -100;
-float av2_t_y =   0;
-float av2_t_z =   -700;
-
-**/
-unsigned long long int controle_movimentacao = 1;
+unsigned long long int controle_giro = 5;
+unsigned long long int controle_movimentacao = 20;
 void movimentacao(void){
 	// avião decolando
 	if (av1_t_z < 800){
@@ -490,9 +599,27 @@ void movimentacao(void){
 		av2_t_y += controle_movimentacao;
 	}
 	
+	// giro radar
+	if (controle_giro >= 6) {
+		controle_giro = 5;
+	}
+	
+	if (controle_movimentacao >= 21) {
+		controle_movimentacao = 20;
+	}
+	
+	radar_rot_y += controle_giro;
+
 	glutPostRedisplay();
-	glutTimerFunc(100,movimentacao, 1);
+	glutTimerFunc(100, movimentacao, 1);
 	controle_movimentacao++;
+	controle_giro++;
+}
+
+
+void giro(void){
+
+
 }
 
 void display(void){
@@ -528,14 +655,8 @@ void display(void){
   	desenhar_galpao(qtd_galpoes, i);
   }
   
-  // Chao da cena gráfica
-  //desenhar_chao(); // TEXTURA
-  
-  // congonhas tem duas pistas:
-  // 1940x45 e 1495x45  
-  //desenhar_pista(-100.0,1940.0); // TEXTURA
-  //desenhar_pista(100.0,1495.0); // TEXTURA
-
+  // Radar
+  desenhar_radar(radar_rot_y);
   
   // Portoes onde ficarao os portoes de embarque
   desenhar_portoes();
