@@ -62,7 +62,6 @@ GLfloat planotext[4][2]={
   {-COORD_TEXTURE,+COORD_TEXTURE}
 };
 
-
 static int rotx = 45;
 static int roty = 0;
 
@@ -70,6 +69,20 @@ static float zoom = -1500.0;
 
 GLuint textura_asfalto;
 GLuint textura_grama;
+
+// avião pousando
+int   av1_rot_x = 15;
+int   av1_rot_y = 0; 
+float av1_t_x = -100.0;
+float av1_t_y = 200.0;
+float av1_t_z = -1500.0;
+
+// avião decolando
+int   av2_rot_x = 0;
+int   av2_rot_y = 180; 
+float av2_t_x =   -100;
+float av2_t_y =   0;
+float av2_t_z =   -700;
 
 void carregar_textura(char * caminho, GLuint * textura, int n){
   IMAGE *img;
@@ -435,6 +448,52 @@ void desenhar_aviao(int rot_x, int rot_y, float t_x, float t_y, float t_z){
   
   glPopMatrix();
 }
+/**
+// avião pousando
+int   av1_rot_x = 15;
+int   av1_rot_y = 0; 
+float av1_t_x = -100.0;
+float av1_t_y = 200.0;
+float av1_t_z = -1500.0;
+
+// avião decolando
+int   av2_rot_x = 0;
+int   av2_rot_y = 180; 
+float av2_t_x =   -100;
+float av2_t_y =   0;
+float av2_t_z =   -700;
+
+**/
+unsigned long long int controle_movimentacao = 1;
+void movimentacao(void){
+	// avião decolando
+	if (av1_t_z < 800){
+		av1_t_z += controle_movimentacao;
+	}
+			
+	if (av1_t_y > 100){
+		av1_t_y -= controle_movimentacao;
+		av1_rot_x = 0;
+	}
+	
+	if (av1_t_y > 100 && av1_rot_x <= 2){
+		av1_rot_x *= 0.733333;
+	}else if(av1_rot_x < 0){
+		av1_rot_x = 0;
+	}
+	
+	// avião decolando
+	if (av2_t_z < 700){
+		av2_t_z += controle_movimentacao;
+	}
+	if (av2_t_z > 0){
+		av2_t_y += controle_movimentacao;
+	}
+	
+	glutPostRedisplay();
+	glutTimerFunc(100,movimentacao, 1);
+	controle_movimentacao++;
+}
 
 void display(void){
 	
@@ -481,12 +540,11 @@ void display(void){
   // Portoes onde ficarao os portoes de embarque
   desenhar_portoes();
   
-  
   // aviao pousando
-  desenhar_aviao(15, 0, -100.0, -50.0, -700.0); 
+  desenhar_aviao(av1_rot_x, av1_rot_y, av1_t_x, av1_t_y, av1_t_z); 
   
   // aviao decolando
-  desenhar_aviao(20, 180, -100, -10.0, 300.0); 
+  desenhar_aviao(av2_rot_x, av2_rot_y, av2_t_x, av2_t_y, av2_t_z); 
   
   // aviao portao de embarque
   desenhar_aviao(0, 90, -50.0, PORTAO_ESCALONAMENTO_Y, 350.0); 
@@ -580,7 +638,8 @@ int main(int argc, char** argv){
   glutInitWindowPosition (100, 100);
   glutCreateWindow (argv[0]);
   init ();
-  glutDisplayFunc(display); 
+  glutDisplayFunc(display);
+  glutTimerFunc(10,movimentacao,1);
   glutReshapeFunc(reshape);
   glutKeyboardFunc(keyboard);
   glutMouseFunc(mouse);
