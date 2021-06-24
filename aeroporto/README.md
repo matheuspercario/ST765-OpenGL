@@ -1,41 +1,48 @@
 # Metadados
- * **_Autor: Raphael Lira dos Santos | RA: 223865_**
- * **_Autor: Matheus Percário Bruder | RA: 222327_**
- * *Criado em: 29/04/2021*
- * *Arquivo: "main.c"*
 
- # Projeto Aeroporto
+* **_Autor: Raphael Lira dos Santos | RA: 223865_**
+* **_Autor: Matheus Percário Bruder | RA: 222327_**
+* *Criado em: 29/04/2021*
+* *Arquivo: "main.c"*
 
- ## Descrição 
-  Modele via OpenGL uma cena gráfica que contenha a simulação de um aeroporto. Pesquise referências antes de iniciar a modelagem: aeroportos modelados em desenhos animados infantis são bons exemplos devido à sua simplicidade. A cena deve utilizar ao menos 3 tipos diferentes de elementos geométricos.
+---
+# Projeto Aeroporto
+
+## Descrição
+
+Modele via OpenGL uma cena gráfica que contenha a simulação de um aeroporto. Pesquise referências antes de iniciar a modelagem: aeroportos modelados em desenhos animados infantis são bons exemplos devido à sua simplicidade. A cena deve utilizar ao menos 3 tipos diferentes de elementos geométricos.
   
-  Use objetos sólidos na modelagem. Use também teclas (ou mouse) para permitir a interação do usuário com a cena, permitindo a sua rotação com relação ao eixo vertical e o efeito zoom. Tente fazer em escala (escolha as dimensões). Deve ser entregue o código `fonte.c` e um `print` da cena (2 arquivos).
+Use objetos sólidos na modelagem. Use também teclas (ou mouse) para permitir a interação do usuário com a cena, permitindo a sua rotação com relação ao eixo vertical e o efeito zoom. Tente fazer em escala (escolha as dimensões). Deve ser entregue o código `fonte.c` e um `print` da cena (2 arquivos).
 
-  **Observação:** *Tenha também em mente que este exercício será a base para os exercícios seguintes, que consistem na inclusão de textura e iluminação na cena.*
+**Observação:** *Tenha também em mente que este exercício será a base para os exercícios seguintes, que consistem na inclusão de textura e iluminação na cena.*
 
+### Explicação
 
- ### Explicação
-  Antes de mais nada, nossa cena gráfica tenta representar um aeroporto de grande porte, incluindo duas pistas, vários hangares (galpões em que os aviões são guardados), um portão de embarque com várias rampas, uma torre de controle e, por fim, um avião (teco-teco).
+Antes de mais nada, nossa cena gráfica tenta representar um aeroporto de grande porte, incluindo duas pistas, vários hangares (galpões em que os aviões são guardados), um portão de embarque com várias rampas, uma torre de controle e, por fim, um avião (teco-teco).
 
-  Desse modo, a fim de atender os requisitos propostos pelo professor, os diferentes tipos de **elementos geométricos** escolhidos, foram:
-  - **Cubo:** *Solo, pistas, galpões, portões de embarque, asas dos aviões;*
-  - **Esfera:** *Corpo dos aviões;*
-  - **Cilindro:** *Torre de controle;*
-  - **Cone:** *Cobertura da torre de controle.*
+Desse modo, a fim de atender os requisitos propostos pelo professor, os diferentes tipos de **elementos geométricos** escolhidos, foram:
 
- Além disso, o usuário pode interagir com a cena gráfica rotacionando no eixo X e no eixo Y. Isso pode ser um pouco confuso no início, mas ajuda muito na visualização do aeroporto. Ademais, foi preciso também proporcionar ao usuário a possibilidade de dar "*zoom*" na cena gráfica. A seguir estão dispostos os comandos para interação com a cena gráfica:
- - **Rotacionar no eixo X:** *W ou S;*
- - **Rotacionar no eixo Y:** *A ou D;*
- - **Zoom:**  *Scroll do mouse.*
+* **Cubo:** *Solo, pistas, galpões, portões de embarque, asas dos aviões;*
+* **Esfera:** *Corpo dos aviões;*
+* **Cilindro:** *Torre de controle;*
+* **Cone:** *Cobertura da torre de controle.*
+
+Além disso, o usuário pode interagir com a cena gráfica rotacionando no eixo X e no eixo Y. Isso pode ser um pouco confuso no início, mas ajuda muito na visualização do aeroporto. Ademais, foi preciso também proporcionar ao usuário a possibilidade de dar "*zoom*" na cena gráfica. A seguir estão dispostos os comandos para interação com a cena gráfica:
+
+* **Rotacionar no eixo X:** *W ou S;*
+* **Rotacionar no eixo Y:** *A ou D;*
+* **Zoom:**  *Scroll do mouse.*
   
+### Prints da cena
 
- ### Prints da cena:
  | Zoom out                                   | Zoom in                                       | Torre e avião                                       |
  | ------------------------------------------ | --------------------------------------------- | --------------------------------------------------- |
  | ![img-1](assets/images/aeroporto-cima.png) | ![img-1](assets/images/aeroporto-portoes.png) | ![img-1](assets/images/aeroporto-torre-galpoes.png) |
 
- ---
- ## Código fonte
+---
+
+## Código fonte
+
  ```C
 #include<stdlib.h>
 #include<GL/glut.h>
