@@ -83,7 +83,7 @@ GLuint textura_asfalto;
 GLuint textura_grama;
 
 // avião pousando
-int   av1_rot_x = 15;
+int   av1_rot_x = 0;
 int   av1_rot_y = 0; 
 float av1_t_x = -100.0;
 float av1_t_y = 200.0;
@@ -572,48 +572,42 @@ void desenhar_aviao(int rot_x, int rot_y, float t_x, float t_y, float t_z){
   glPopMatrix();
 }
 
-unsigned long long int controle_giro = 5;
 unsigned long long int controle_movimentacao = 20;
 void movimentacao(void){
+	// avião pousando
+	if (av1_t_z < 800){		
+		if (av1_t_z > 0){
+			av1_t_z += controle_movimentacao * 0.1;
+		}else{
+			av1_t_z += controle_movimentacao/5;
+		}
+	}
+				
+	if (av1_t_y > 5){
+		av1_t_y -= 5;
+	}
+
 	// avião decolando
-	if (av1_t_z < 800){
-		av1_t_z += controle_movimentacao;
+	if (av2_t_z < 5000){
+		av2_t_z += controle_movimentacao * 0.1;
 	}
-			
-	if (av1_t_y > 100){
-		av1_t_y -= controle_movimentacao;
-		av1_rot_x = 0;
-	}
-	
-	if (av1_t_y > 100 && av1_rot_x <= 2){
-		av1_rot_x *= 0.733333;
-	}else if(av1_rot_x < 0){
-		av1_rot_x = 0;
-	}
-	
-	// avião decolando
-	if (av2_t_z < 700){
-		av2_t_z += controle_movimentacao;
-	}
-	if (av2_t_z > 0){
-		av2_t_y += controle_movimentacao;
-	}
-	
-	// giro radar
-	if (controle_giro >= 6) {
-		controle_giro = 5;
+	if (av2_t_z > 0 && av2_t_y < 700){
+		av2_t_y += 2;
 	}
 	
 	if (controle_movimentacao >= 21) {
 		controle_movimentacao = 20;
 	}
 	
-	radar_rot_y += controle_giro;
+	radar_rot_y += 0.8;
+		
+	if (radar_rot_y >= 360){
+		radar_rot_y = 0;
+	}
 
 	glutPostRedisplay();
-	glutTimerFunc(100, movimentacao, 1);
+	glutTimerFunc(10, movimentacao, 1);
 	controle_movimentacao++;
-	controle_giro++;
 }
 
 void display(void){
