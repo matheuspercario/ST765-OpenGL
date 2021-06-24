@@ -58,6 +58,7 @@ Nesta seção há também a evolução da cena gráfica construída ao longo do 
 | ![img-3](assets/images/aeroporto-iluminacao.png) | ![img-4](assets/images/aeroporto-animacao.png) |
 
 ---
+
 ## Código fonte
 
 ```C
